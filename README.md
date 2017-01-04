@@ -1,6 +1,8 @@
 # InkPlatform
 C# framework to use Wacom STU Signpads easily with a few lines of codes
-##Features
+## Download package
+Package is also available on nuget --> https://www.nuget.org/packages/WacomSolutionPartner.InkPlatform/
+## Features
 1. Scan for plugged in sign pads
 2. Connect/Disconnect 
 3. Create layouts to display on signpads
