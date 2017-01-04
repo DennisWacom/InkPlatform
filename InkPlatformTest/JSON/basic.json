@@ -1,0 +1,10 @@
+{
+	"Layout":"SIGNATURE_LAYOUT",
+	"Name":"basic",
+	"CancelText":"Cancel",
+	"ClearText":"Clear",
+	"OkText":"OK",
+	"SignatureScreenLayout":"STANDARD",
+	"Who":"Name of signer",
+	"Why":"Reason for signing"
+}

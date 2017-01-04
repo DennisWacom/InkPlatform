@@ -1,0 +1,2 @@
+Prerequisite:
+This framework uses Wacom STU SDK. In order to use it, you'll need to have Wacom STU SDK installed on your system, and reference to the Interop.wgssSTU.dll. I'm using version 2.10 32-bit, but earlier versions should work fine as well, though not tested.

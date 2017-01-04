@@ -1,0 +1,24 @@
+{
+	"Layout":"BOX_LAYOUT",
+	"Name":"choose",
+	"Flow":"Down",
+	"Spacing":5,
+	"LeftRatio":1,
+	"CentreRatio":5,
+	"RightRatio":1,
+	"TopRatio":1,
+	"MiddleRatio":5,
+	"BottomRatio":1,
+	"MiddleCentre":[
+		{
+		"__type":"JSONSerializer.InterfaceElementButton:#InkPlatform.UserInterface","ElementType":"BUTTON", 
+		"Name":"btnColor",   "AutoResize":true,    "FontSize":30,
+		"Text":"Color Signature","TextColor":[0,0,0],"VAlign":"MIDDLE", "Action":"Done", "NextScreen":"color"
+		},
+		{
+		"__type":"JSONSerializer.InterfaceElementButton:#InkPlatform.UserInterface","ElementType":"BUTTON", 
+		"Name":"btnBasic",   "AutoResize":true,    "FontSize":30,
+		"Text":"Basic Signature","TextColor":[0,0,0],"VAlign":"MIDDLE", "Action":"Done", "NextScreen":"basic"	
+		}
+	]
+}

@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{41F464BC-A24D-41BD-9189-BB29D4B49EAA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>InkPlatform</RootNamespace>
+    <AssemblyName>InkPlatform</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Interop.wgssSTU">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Wacom STU SDK\COM\bin\Win32\Interop.wgssSTU.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Hardware\PenDevice.cs" />
+    <Compile Include="Hardware\DeviceScanner.cs" />
+    <Compile Include="Hardware\IDeviceScanner.cs" />
+    <Compile Include="Hardware\Wacom\STU300.cs" />
+    <Compile Include="Hardware\Wacom\STU430.cs" />
+    <Compile Include="Hardware\Wacom\STU430V.cs" />
+    <Compile Include="Hardware\Wacom\STU500.cs" />
+    <Compile Include="Hardware\Wacom\STU520.cs" />
+    <Compile Include="Hardware\Wacom\STU530.cs" />
+    <Compile Include="Hardware\Wacom\STU540.cs" />
+    <Compile Include="Hardware\Wacom\WacomDeviceScanner.cs" />
+    <Compile Include="Hardware\Wacom\WacomSignpad.cs" />
+    <Compile Include="InkInterface.cs" />
+    <Compile Include="Ink\ContextPenData.cs" />
+    <Compile Include="Steganography\Crypto.cs" />
+    <Compile Include="Ink\InkData.cs" />
+    <Compile Include="Ink\InkProcessor.cs" />
+    <Compile Include="Steganography\SteganographyHelper.cs" />
+    <Compile Include="Steganography\SteganographyHelper2.cs" />
+    <Compile Include="strings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>strings.resx</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\SignpadControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\SignpadControl.Designer.cs">
+      <DependentUpon>SignpadControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\SignpadWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UserControls\SignpadWindow.Designer.cs">
+      <DependentUpon>SignpadWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserInterface\BoxLayout.cs" />
+    <Compile Include="UserInterface\Element.cs" />
+    <Compile Include="UserInterface\ElementButton.cs" />
+    <Compile Include="UserInterface\ElementImage.cs" />
+    <Compile Include="UserInterface\ElementLine.cs" />
+    <Compile Include="UserInterface\ElementText.cs" />
+    <Compile Include="UserInterface\Layout.cs" />
+    <Compile Include="UserInterface\JSONSerializer.cs" />
+    <Compile Include="UserInterface\LayoutEventArgs.cs" />
+    <Compile Include="UserInterface\LayoutManager.cs" />
+    <Compile Include="UserInterface\SignatureLayout.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Windows\UsbHandler.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Utilities\getSerialPorts.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="strings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>strings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\SignpadControl.resx">
+      <DependentUpon>SignpadControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\SignpadWindow.resx">
+      <DependentUpon>SignpadWindow.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
