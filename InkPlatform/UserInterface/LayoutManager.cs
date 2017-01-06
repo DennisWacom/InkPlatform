@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.IO;
 using System.Reflection;
+using System.Net;
 
 namespace InkPlatform.UserInterface
 {
@@ -192,36 +193,64 @@ namespace InkPlatform.UserInterface
             string line = "";
             string readJson = "";
 
-            string OriginalCurrDir = Environment.CurrentDirectory;
-
-            Environment.CurrentDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
-            try
+            if (File.Exists(path))
             {
-                Environment.CurrentDirectory = Path.GetDirectoryName(path);
-                currLayout = Path.GetFileName(path);
-            }
-            catch (Exception)
-            {
-                currLayout = path;
-            }
+                //This code sets the current directory for the images in the layout file
+                //so that they are automatically assumed to be in the same folder as the layout file
+                string OriginalCurrDir = Environment.CurrentDirectory;
 
-            try
-            {
-                StreamReader sr = new StreamReader(currLayout);
-                while ((line = sr.ReadLine()) != null)
+                Environment.CurrentDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+                try
                 {
-                    readJson = readJson + line + System.Environment.NewLine;
+                    Environment.CurrentDirectory = Path.GetDirectoryName(path);
+                    currLayout = Path.GetFileName(path);
                 }
-                sr.Close();
-
+                catch (Exception)
+                {
+                    currLayout = path;
+                }
+                //--------------------------------------------------------------
+                
+                try
+                {
+                    StreamReader sr = new StreamReader(currLayout);
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        readJson = readJson + line + System.Environment.NewLine;
+                    }
+                    sr.Close();
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            else
+            {
+                //try if it is a url
+                try
+                {
+                    Uri layoutUri = new Uri(path);
+                    WebClient webClient = new WebClient();
+                    readJson = webClient.DownloadString(layoutUri);
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            
+            try
+            {
                 Layout layout = (Layout)JSONSerializer.DeserializeLayout(readJson);
 
                 return layout;
             }
             catch(Exception ex)
             {
-                Environment.CurrentDirectory = OriginalCurrDir;
+                //Environment.CurrentDirectory = OriginalCurrDir;
+                //Obselete (setting the current directory, as above comments)
                 throw ex;
             }
             
