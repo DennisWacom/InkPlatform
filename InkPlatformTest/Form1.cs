@@ -351,6 +351,10 @@ namespace InkPlatformTest
             }
             
         }
-        
+
+        private void btnDisconnect_Click(object sender, EventArgs e)
+        {
+            signpadControl1.Disconnect();
+        }
     }
 }

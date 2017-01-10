@@ -39,6 +39,7 @@
             this.cboInitialFile = new System.Windows.Forms.ComboBox();
             this.btnLoad = new System.Windows.Forms.Button();
             this.signpadControl1 = new InkPlatform.UserControls.SignpadControl();
+            this.btnDisconnect = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnScanDevice
@@ -62,7 +63,7 @@
             // 
             // btnGetSignature
             // 
-            this.btnGetSignature.Location = new System.Drawing.Point(226, 41);
+            this.btnGetSignature.Location = new System.Drawing.Point(242, 41);
             this.btnGetSignature.Name = "btnGetSignature";
             this.btnGetSignature.Size = new System.Drawing.Size(78, 23);
             this.btnGetSignature.TabIndex = 4;
@@ -106,7 +107,7 @@
             // 
             this.btnBox.Location = new System.Drawing.Point(114, 41);
             this.btnBox.Name = "btnBox";
-            this.btnBox.Size = new System.Drawing.Size(106, 23);
+            this.btnBox.Size = new System.Drawing.Size(119, 23);
             this.btnBox.TabIndex = 8;
             this.btnBox.Text = "Box Layout";
             this.btnBox.UseVisualStyleBackColor = true;
@@ -117,12 +118,12 @@
             this.cboInitialFile.FormattingEnabled = true;
             this.cboInitialFile.Location = new System.Drawing.Point(89, 70);
             this.cboInitialFile.Name = "cboInitialFile";
-            this.cboInitialFile.Size = new System.Drawing.Size(131, 21);
+            this.cboInitialFile.Size = new System.Drawing.Size(144, 21);
             this.cboInitialFile.TabIndex = 9;
             // 
             // btnLoad
             // 
-            this.btnLoad.Location = new System.Drawing.Point(226, 68);
+            this.btnLoad.Location = new System.Drawing.Point(242, 68);
             this.btnLoad.Name = "btnLoad";
             this.btnLoad.Size = new System.Drawing.Size(78, 23);
             this.btnLoad.TabIndex = 10;
@@ -144,11 +145,22 @@
             this.signpadControl1.Size = new System.Drawing.Size(424, 150);
             this.signpadControl1.TabIndex = 3;
             // 
+            // btnDisconnect
+            // 
+            this.btnDisconnect.Location = new System.Drawing.Point(242, 12);
+            this.btnDisconnect.Name = "btnDisconnect";
+            this.btnDisconnect.Size = new System.Drawing.Size(78, 23);
+            this.btnDisconnect.TabIndex = 11;
+            this.btnDisconnect.Text = "Disconnect";
+            this.btnDisconnect.UseVisualStyleBackColor = true;
+            this.btnDisconnect.Click += new System.EventHandler(this.btnDisconnect_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(427, 383);
+            this.Controls.Add(this.btnDisconnect);
             this.Controls.Add(this.btnLoad);
             this.Controls.Add(this.cboInitialFile);
             this.Controls.Add(this.btnBox);
@@ -179,6 +191,7 @@
         private System.Windows.Forms.Button btnBox;
         private System.Windows.Forms.ComboBox cboInitialFile;
         private System.Windows.Forms.Button btnLoad;
+        private System.Windows.Forms.Button btnDisconnect;
     }
 }
 

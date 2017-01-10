@@ -418,6 +418,7 @@ namespace InkPlatform.UserControls
         public void Disconnect()
         {
             Log("Disconnect");
+            ClearScreen();
             if(_currentPenDevice != null)
             {
                 _connectionId = "";

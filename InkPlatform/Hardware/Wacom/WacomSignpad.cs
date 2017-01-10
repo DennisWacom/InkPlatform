@@ -19,7 +19,7 @@ namespace InkPlatform.Hardware.Wacom
         public static new string VENDOR_NAME = strings.WACOM;
         
         int _retry_times = 5;
-        int _retry_wait = 1000;
+        int _retry_wait = 2000;
 
         IUsbDevice _usbDevice;
         Tablet _tablet;
@@ -92,11 +92,13 @@ namespace InkPlatform.Hardware.Wacom
                 //Retry if the error code is wrong state (Meaning device busy)
                 if (ec.value != (int)ErrorCode.ErrorCode_None)
                 {
+                    Random random = new Random();
                     int retryCount = 0;
                     while (retryCount < retryTimes)
                     {
-                        Log("Wait " + retryWait + "ms");
-                        Thread.Sleep(retryWait);
+                        int randomWait = random.Next(100, retryWait);
+                        Log("Wait " + randomWait + "ms");
+                        Thread.Sleep(randomWait);
                         Log("Tablet usb connect");
                         ec = _tablet.usbConnect(_usbDevice, true);
                         Log(GetConnectUsbErrorMessage(ec.value));
@@ -108,8 +110,12 @@ namespace InkPlatform.Hardware.Wacom
 
                         retryCount++;
                     }
-                    Log(PenDeviceErrorMessage(PEN_DEVICE_ERROR.DEVICE_BUSY), 1);
-                    return (int)PEN_DEVICE_ERROR.DEVICE_BUSY;
+
+                    if(ec.value != (int)ErrorCode.ErrorCode_None)
+                    {
+                        Log(PenDeviceErrorMessage(PEN_DEVICE_ERROR.DEVICE_BUSY), 1);
+                        return (int)PEN_DEVICE_ERROR.DEVICE_BUSY;
+                    }
                 }
                 
             }
