@@ -77,7 +77,7 @@ namespace InkPlatform.Hardware.Wacom
 
         private int ConnectUsb(bool exclusive, int retryTimes, int retryWait)
         {
-            Log("ConnectUsb " + (exclusive ? "exclusive " : " ") + "retry " + retryTimes + " wait " + retryWait + "ms");
+            Log("ConnectUsb " + (exclusive ? "exclusive " : " ") + "retry " + retryTimes + " wait random max " + retryWait + "ms");
             if(_usbDevice == null)
             {
                 resetUsbDevice();
@@ -87,11 +87,12 @@ namespace InkPlatform.Hardware.Wacom
             {
                 Log("Tablet usb connect");
                 IErrorCode ec = _tablet.usbConnect(_usbDevice, exclusive);
-                Log(GetConnectUsbErrorMessage(ec.value));
+                Log("Return " + ec.value.ToString() + " - " + GetConnectUsbErrorMessage(ec.value));
 
                 //Retry if the error code is wrong state (Meaning device busy)
                 if (ec.value != (int)ErrorCode.ErrorCode_None)
                 {
+                    Log("Connection attempt failed, pending retry");
                     Random random = new Random();
                     int retryCount = 0;
                     while (retryCount < retryTimes)
@@ -101,7 +102,7 @@ namespace InkPlatform.Hardware.Wacom
                         Thread.Sleep(randomWait);
                         Log("Tablet usb connect");
                         ec = _tablet.usbConnect(_usbDevice, true);
-                        Log(GetConnectUsbErrorMessage(ec.value));
+                        Log("Return " + ec.value.ToString() + " - " + GetConnectUsbErrorMessage(ec.value));
 
                         if (ec.value == (int)ErrorCode.ErrorCode_None)
                         {

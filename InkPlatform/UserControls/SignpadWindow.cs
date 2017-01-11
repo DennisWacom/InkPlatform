@@ -18,6 +18,7 @@ namespace InkPlatform.UserControls
         public SignpadWindow()
         {
             InitializeComponent();
+            signpadControl.Logging = true;
             signpadControl.LogFunction = ReceivedSignpadControlLog;
             signpadControl.DonePressed = Done;
             signpadControl.CancelPressed = Cancel;
@@ -50,8 +51,8 @@ namespace InkPlatform.UserControls
             get { return _logging; }
             set
             {
-                _logging = true;
-                signpadControl.Logging = true;
+                _logging = value;
+                signpadControl.Logging = value;
                 signpadControl.LogFunction = ReceivedSignpadControlLog;
             }
         }

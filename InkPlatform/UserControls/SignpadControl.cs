@@ -171,8 +171,12 @@ namespace InkPlatform.UserControls
 
         public int Connect(PenDevice penDevice)
         {
+            Log("Connect");
+            penDevice.LogFunction = ReceivePenDeviceLog;
+
             if (IsConnected(penDevice))
             {
+                Log("Already connected");
                 return (int)PEN_DEVICE_ERROR.NONE;
             }
             else
@@ -217,8 +221,12 @@ namespace InkPlatform.UserControls
         public int DisplayBitmap(Bitmap bitmap, PenDevice penDevice)
         {
             Log("Display bitmap");
-            if (!penDevice.HasScreen) return (int)PEN_DEVICE_ERROR.NOT_SUPPORTED;
-
+            if (!penDevice.HasScreen)
+            {
+                Log("Pen device does not support display bitmap");
+                return (int)PEN_DEVICE_ERROR.NOT_SUPPORTED;
+            }
+            
             //make sure pendevice is connected
             if(Connect(penDevice) != (int)PEN_DEVICE_ERROR.NONE)
             {
