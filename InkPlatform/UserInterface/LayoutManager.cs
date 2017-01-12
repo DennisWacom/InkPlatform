@@ -223,7 +223,8 @@ namespace InkPlatform.UserInterface
                 }
                 catch (Exception ex)
                 {
-                    throw ex;
+                    Exception ex2 = new Exception("Error reading file " + path, ex);
+                    throw ex2;
                 }
             }
             else
@@ -237,7 +238,8 @@ namespace InkPlatform.UserInterface
                 }
                 catch (Exception ex)
                 {
-                    throw ex;
+                    Exception ex2 = new Exception("Error reading uri " + path, ex);
+                    throw ex2;
                 }
             }
             
@@ -251,7 +253,8 @@ namespace InkPlatform.UserInterface
             {
                 //Environment.CurrentDirectory = OriginalCurrDir;
                 //Obselete (setting the current directory, as above comments)
-                throw ex;
+                Exception ex2 = new Exception("Format for JSON is incorrect - " + path, ex);
+                throw ex2;
             }
             
         }
