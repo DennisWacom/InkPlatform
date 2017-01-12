@@ -132,7 +132,7 @@ namespace InkPlatform.UserInterface
 
             Size intendedSize = new Size((int)btn.Bounds.Width, (int)btn.Bounds.Height);
             Size calSize = TextRenderer.MeasureText(btn.Text, btn.TextFont, intendedSize);
-
+            
             if (intendedSize.Width == 0 && intendedSize.Height == 0)
             {
                 intendedSize = calSize;
@@ -143,13 +143,22 @@ namespace InkPlatform.UserInterface
             {
                 if (intendedSize.Width != 0 && intendedSize.Height != 0)
                 {
-                    while (calSize.Width > intendedSize.Width || calSize.Height > intendedSize.Height)
+                    while (calSize.Width > intendedSize.Width)
                     {
                         btn.FontSize = btn.FontSize - 1;
                         calSize = TextRenderer.MeasureText(btn.Text, btn.TextFont, intendedSize);
+                        calSize.Height = intendedSize.Height;
                         btn.Bounds = new Rectangle(btn.Bounds.X, btn.Bounds.Y, calSize.Width, calSize.Height);
                     }
-                    
+
+                    while (calSize.Height > intendedSize.Height)
+                    {
+                        btn.FontSize = btn.FontSize - 1;
+                        calSize = TextRenderer.MeasureText(btn.Text, btn.TextFont, intendedSize);
+                        calSize.Width = intendedSize.Width;
+                        btn.Bounds = new Rectangle(btn.Bounds.X, btn.Bounds.Y, calSize.Width, calSize.Height);
+                    }
+
                 }
             }
 
