@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Reflection;
 using System.Net;
+using System.Web;
 
 namespace InkPlatform.UserInterface
 {
@@ -192,6 +193,15 @@ namespace InkPlatform.UserInterface
             string currLayout = "";
             string line = "";
             string readJson = "";
+            
+            if (!File.Exists(path))
+            {
+                string urlDecodedPath = HttpUtility.UrlDecode(path);
+                if (File.Exists(urlDecodedPath))
+                {
+                    path = urlDecodedPath;
+                }
+            }
 
             if (File.Exists(path))
             {
