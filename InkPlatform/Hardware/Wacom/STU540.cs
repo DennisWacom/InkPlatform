@@ -26,5 +26,19 @@ namespace InkPlatform.Hardware.Wacom
             _deviceType = DEVICE_TYPE.SIGNPAD;
             _screenDimension = new Size(800, 480);
         }
+
+        public STU540() : base()
+        {
+            _pid = 0x00a7;
+            _productModel = "STU-540";
+            _maxPressureLevels = 1024;
+            _maxReportRate = 200;
+            _hasScreen = true;
+            _supportUsb = true;
+            _supportSerial = true;
+            _supportColor = true;
+            _deviceType = DEVICE_TYPE.SIGNPAD;
+            _screenDimension = new Size(800, 480);
+        }
     }
 }

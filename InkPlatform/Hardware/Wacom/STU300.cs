@@ -29,6 +29,22 @@ namespace InkPlatform.Hardware.Wacom
             ConnectionMode = CONNECTION_MODE.USB;
         }
 
-        
+        public STU300() : base()
+        {
+            _pid = 0x00a2;
+            _productModel = "STU-300";
+            _maxPressureLevels = 1024;
+            _maxReportRate = 200;
+            _hasScreen = true;
+            _supportUsb = true;
+            _supportSerial = false;
+            _supportColor = false;
+            _deviceType = DEVICE_TYPE.SIGNPAD;
+            _screenDimension = new Size(396, 100);
+
+            ConnectionMode = CONNECTION_MODE.USB;
+        }
+
+
     }
 }

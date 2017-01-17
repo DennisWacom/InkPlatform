@@ -27,5 +27,20 @@ namespace InkPlatform.Hardware.Wacom
             
             _screenDimension = new Size(640, 480);
         }
+
+        public STU500() : base()
+        {
+            _pid = 0x00a1;
+            _productModel = "STU-500";
+            _maxPressureLevels = 1024;
+            _maxReportRate = 200;
+            _hasScreen = true;
+            _supportUsb = true;
+            _supportSerial = true;
+            _supportColor = false;
+            _deviceType = DEVICE_TYPE.SIGNPAD;
+
+            _screenDimension = new Size(640, 480);
+        }
     }
 }

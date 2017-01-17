@@ -39,6 +39,18 @@ namespace InkPlatform.Hardware.Wacom
             _tablet.onGetReportException += _tablet_onGetReportException;
         }
 
+        public WacomSignpad()
+        {
+            Log("WacomSignpad created");
+            _vid = 0x056a;
+            _vendorName = strings.WACOM;
+            _sensorResolution = 2540;
+            _tablet = new Tablet();
+            _tablet.onPenData += _tablet_onPenData;
+            _tablet.onPenDataTimeCountSequence += _tablet_onPenDataTimeCountSequence;
+            _tablet.onGetReportException += _tablet_onGetReportException;
+        }
+
         private void _tablet_onGetReportException(ITabletEventsException pException)
         {
             try

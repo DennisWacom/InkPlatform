@@ -27,5 +27,20 @@ namespace InkPlatform.Hardware.Wacom
             _screenDimension = new Size(320, 200);
             ConnectionMode = CONNECTION_MODE.USB;
         }
+
+        public STU430() : base()
+        {
+            _pid = 0x00a4;
+            _productModel = "STU-430";
+            _maxPressureLevels = 1024;
+            _maxReportRate = 200;
+            _hasScreen = true;
+            _supportUsb = true;
+            _supportSerial = false;
+            _supportColor = false;
+            _deviceType = DEVICE_TYPE.SIGNPAD;
+            _screenDimension = new Size(320, 200);
+            ConnectionMode = CONNECTION_MODE.USB;
+        }
     }
 }
