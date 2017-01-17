@@ -33,6 +33,21 @@ namespace InkPlatform.Hardware.Wacom
 
             return result;
         }
+
+        public WacomSignpad IdentifyWacomSignpad(ushort vid, ushort pid)
+        {
+            if (vid != WacomSignpad.VID) return null;
+
+            if (pid == STU300.PID) return new STU300();
+            if (pid == STU430.PID) return new STU430();
+            if (pid == STU430V.PID) return new STU430V();
+            if (pid == STU500.PID) return new STU500();
+            if (pid == STU520.PID) return new STU520();
+            if (pid == STU530.PID) return new STU530();
+            if (pid == STU540.PID) return new STU540();
+
+            return null;
+        }
         
         public WacomSignpad IdentifyWacomSignpad(IUsbDevice usbDevice)
         {

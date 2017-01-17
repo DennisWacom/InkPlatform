@@ -24,6 +24,14 @@ namespace InkPlatform.Hardware
             return results;
         }
 
+        public PenDevice IdentifyPenDevice(ushort vid, ushort pid)
+        {
+            PenDevice wacomPenDevice = _wacomScanner.IdentifyWacomSignpad(vid, pid);
+            if(wacomPenDevice != null) { return wacomPenDevice; }
+
+            return null;
+        }
+
         public List<PenDevice> Scan()
         {
             List<PenDevice> results = new List<PenDevice>();
