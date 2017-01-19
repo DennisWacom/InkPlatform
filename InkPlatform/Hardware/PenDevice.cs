@@ -275,7 +275,36 @@ namespace InkPlatform.Hardware
                     return "";
             }
         }
-        
+
+        public virtual bool IsSameDevice(PenDevice other)
+        {
+            try
+            {
+                if (Vid == other.Vid && Pid == other.Pid)
+                {
+                    if (SerialNo != null && SerialNo != "" && SerialNo != "0" &&
+                        other.SerialNo != null && other.SerialNo != "" && other.SerialNo != "0")
+                    {
+                        if (SerialNo == other.SerialNo)
+                        {
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+        }
+
         public virtual SerializablePenDevice Serialize()
         {
             SerializablePenDevice device = new SerializablePenDevice();
@@ -395,7 +424,7 @@ namespace InkPlatform.Hardware
 
         [DataMember]
         public int TabletHeight;
-
+        
         public string Serialize()
         {
             DataContractJsonSerializer serializer = new DataContractJsonSerializer(GetType());
