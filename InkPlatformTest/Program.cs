@@ -14,13 +14,13 @@ namespace InkPlatformTest
         [STAThread]
         static void Main()
         {
-            /*
+            
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
-            */
-            PenDeviceTester tester = new PenDeviceTester();
-            tester.TestPenDeviceEquals();
+            
+            //PenDeviceTester tester = new PenDeviceTester();
+            //tester.TestPenDeviceEquals();
         }
     }
 }

@@ -63,17 +63,7 @@ namespace InkPlatform.Hardware.Wacom
             {
                 if(OnDeviceException != null)
                 {
-                    bool disconnect = OnDeviceException();
-                    if (disconnect)
-                    {
-                        _tablet.disconnect();
-                        _tablet = null;
-                    }
-                }
-                else
-                {
-                    _tablet.disconnect();
-                    _tablet = null;
+                    OnDeviceException();
                 }
             }
         }
