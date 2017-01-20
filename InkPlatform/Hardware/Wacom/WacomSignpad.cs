@@ -33,10 +33,7 @@ namespace InkPlatform.Hardware.Wacom
             _vendorName = strings.WACOM;
             _sensorResolution = 2540;
             _usbDevice = usbDevice;
-            _tablet = new Tablet();
-            _tablet.onPenData += _tablet_onPenData;
-            _tablet.onPenDataTimeCountSequence += _tablet_onPenDataTimeCountSequence;
-            _tablet.onGetReportException += _tablet_onGetReportException;
+            initTablet();
         }
 
         public WacomSignpad()
@@ -45,6 +42,11 @@ namespace InkPlatform.Hardware.Wacom
             _vid = 0x056a;
             _vendorName = strings.WACOM;
             _sensorResolution = 2540;
+            initTablet();
+        }
+
+        private void initTablet()
+        {
             _tablet = new Tablet();
             _tablet.onPenData += _tablet_onPenData;
             _tablet.onPenDataTimeCountSequence += _tablet_onPenDataTimeCountSequence;
@@ -98,7 +100,10 @@ namespace InkPlatform.Hardware.Wacom
             try
             {
                 Log("Tablet usb connect");
-                if (_tablet == null) _tablet = new Tablet();
+                if (_tablet == null)
+                {
+                    initTablet();
+                }
                 IErrorCode ec = _tablet.usbConnect(_usbDevice, exclusive);
                 Log("Return " + ec.value.ToString() + " - " + GetConnectUsbErrorMessage(ec.value));
 
@@ -222,7 +227,10 @@ namespace InkPlatform.Hardware.Wacom
 
         private encodingMode TestEncodingMode()
         {
-            if (_tablet == null) _tablet = new Tablet();
+            if (_tablet == null)
+            {
+                initTablet();
+            }
 
             wgssSTU.ProtocolHelper protocolHelper = new wgssSTU.ProtocolHelper();
             wgssSTU.encodingFlag encodingFlag = (wgssSTU.encodingFlag)protocolHelper.simulateEncodingFlag(Pid, 0);
