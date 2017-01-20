@@ -570,11 +570,11 @@ namespace InkPlatform.Hardware.Wacom
         public override int Disconnect()
         {
             Log("Disconnect");
-            ClearScreen();
+            //ClearScreen();
             try
             {
-                Log("Tablet disconnect");
                 _tablet.disconnect();
+                Log("Tablet disconnected");
                 _connectionId = "";
                 return (int)PEN_DEVICE_ERROR.NONE;
             }
