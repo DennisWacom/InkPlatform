@@ -98,6 +98,7 @@ namespace InkPlatform.Hardware.Wacom
             try
             {
                 Log("Tablet usb connect");
+                if (_tablet == null) _tablet = new Tablet();
                 IErrorCode ec = _tablet.usbConnect(_usbDevice, exclusive);
                 Log("Return " + ec.value.ToString() + " - " + GetConnectUsbErrorMessage(ec.value));
 
@@ -574,6 +575,7 @@ namespace InkPlatform.Hardware.Wacom
             try
             {
                 _tablet.disconnect();
+                _tablet = null;
                 Log("Tablet disconnected");
                 _connectionId = "";
                 return (int)PEN_DEVICE_ERROR.NONE;
