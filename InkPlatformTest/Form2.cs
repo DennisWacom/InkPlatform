@@ -59,7 +59,7 @@ namespace InkPlatformTest
             txtLog.SelectionStart = txtLog.Text.Length;
         }
 
-        private void Log(string msg, int alertType)
+        private void Log(string logprefix, string msg, int alertType)
         {
             if (alertType % 2 == 0) return;
 

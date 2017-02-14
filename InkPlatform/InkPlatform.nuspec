@@ -7,7 +7,7 @@
     <authors>dennis</authors>
     <owners>$author$</owners>
     <licenseUrl>https://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
-    <projectUrl>http://www.wacomsolutionpartner.com</projectUrl>
+    <projectUrl>https://github.com/DennisWacom/InkPlatform</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Framework over Wacom STU SDK for much easier usage</description>
     <releaseNotes>Ability to request signatures easily from STU sign pads, control the layout and layout flow</releaseNotes>

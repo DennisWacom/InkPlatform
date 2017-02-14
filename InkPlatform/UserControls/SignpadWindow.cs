@@ -13,6 +13,8 @@ using InkPlatform.Ink;
 
 namespace InkPlatform.UserControls
 {
+    public delegate void PrefixedSendLog(string prefix, string msg, int alertType);
+
     public partial class SignpadWindow: Form
     {
         public SignpadWindow()
@@ -43,7 +45,8 @@ namespace InkPlatform.UserControls
             set { _closeWindowOnCancel = value; }
         }
 
-        public SendLog LogFunction;
+        public PrefixedSendLog LogFunction;
+        public string LogPrefix = "";
         
         private bool _logging = true;
         public bool Logging
@@ -66,7 +69,7 @@ namespace InkPlatform.UserControls
         {
             if(LogFunction != null && _logging)
             {
-                LogFunction(msg, alertType);
+                LogFunction(LogPrefix, msg, alertType);
             }   
         }
 
