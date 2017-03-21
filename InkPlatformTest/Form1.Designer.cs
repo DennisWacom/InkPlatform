@@ -38,8 +38,8 @@
             this.btnBox = new System.Windows.Forms.Button();
             this.cboInitialFile = new System.Windows.Forms.ComboBox();
             this.btnLoad = new System.Windows.Forms.Button();
-            this.signpadControl1 = new InkPlatform.UserControls.SignpadControl();
             this.btnDisconnect = new System.Windows.Forms.Button();
+            this.signpadControl1 = new InkPlatform.UserControls.SignpadControl();
             this.SuspendLayout();
             // 
             // btnScanDevice
@@ -73,9 +73,11 @@
             // 
             // txtLog
             // 
-            this.txtLog.Location = new System.Drawing.Point(1, 253);
+            this.txtLog.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtLog.Location = new System.Drawing.Point(1, 297);
             this.txtLog.Name = "txtLog";
-            this.txtLog.Size = new System.Drawing.Size(423, 122);
+            this.txtLog.Size = new System.Drawing.Size(474, 122);
             this.txtLog.TabIndex = 5;
             this.txtLog.Text = "";
             // 
@@ -131,20 +133,6 @@
             this.btnLoad.UseVisualStyleBackColor = true;
             this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
             // 
-            // signpadControl1
-            // 
-            this.signpadControl1.BackColor = System.Drawing.Color.White;
-            this.signpadControl1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.signpadControl1.DefaultInkWidth = 0.7F;
-            this.signpadControl1.DefaultPenColor = System.Drawing.Color.DarkBlue;
-            this.signpadControl1.InkingOnButton = true;
-            this.signpadControl1.Location = new System.Drawing.Point(1, 97);
-            this.signpadControl1.Logging = true;
-            this.signpadControl1.Name = "signpadControl1";
-            this.signpadControl1.ResizeCondition = InkPlatform.UserControls.SignpadControl.RESIZE_CONDITION.ACTUAL_SIZE;
-            this.signpadControl1.Size = new System.Drawing.Size(424, 150);
-            this.signpadControl1.TabIndex = 3;
-            // 
             // btnDisconnect
             // 
             this.btnDisconnect.Location = new System.Drawing.Point(242, 12);
@@ -155,11 +143,29 @@
             this.btnDisconnect.UseVisualStyleBackColor = true;
             this.btnDisconnect.Click += new System.EventHandler(this.btnDisconnect_Click);
             // 
+            // signpadControl1
+            // 
+            this.signpadControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.signpadControl1.BackColor = System.Drawing.Color.White;
+            this.signpadControl1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.signpadControl1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.signpadControl1.DefaultInkWidth = 0.7F;
+            this.signpadControl1.DefaultPenColor = System.Drawing.Color.DarkBlue;
+            this.signpadControl1.InkingOnButton = false;
+            this.signpadControl1.Location = new System.Drawing.Point(1, 97);
+            this.signpadControl1.Logging = true;
+            this.signpadControl1.Name = "signpadControl1";
+            this.signpadControl1.ResizeCondition = InkPlatform.UserControls.SignpadControl.RESIZE_CONDITION.ACTUAL_SIZE;
+            this.signpadControl1.Size = new System.Drawing.Size(475, 194);
+            this.signpadControl1.TabIndex = 3;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(427, 383);
+            this.ClientSize = new System.Drawing.Size(478, 427);
             this.Controls.Add(this.btnDisconnect);
             this.Controls.Add(this.btnLoad);
             this.Controls.Add(this.cboInitialFile);
@@ -172,6 +178,7 @@
             this.Controls.Add(this.cboDevices);
             this.Controls.Add(this.btnScanDevice);
             this.Name = "Form1";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "InkPlatform Test";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);

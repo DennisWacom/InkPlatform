@@ -17,14 +17,16 @@ namespace InkPlatform.UserInterface
     {
         public static Bitmap CreateBitmap(Layout layout, int width, int height, bool supportColor)
         {
-            // Size the bitmap to the size of the LCD screen.
-            // This application uses the same bitmap for both the screen and client (window).
-            // However, at high DPI, this bitmap will be stretch and it would be better to 
-            // create individual bitmaps for screen and client at native resolutions.
+            return LayoutManager.CreateBitmap(layout, width, height, supportColor, true);
+        }
 
+        public static Bitmap CreateBitmap(Layout layout, int width, int height, bool supportColor, bool scaleToFit)
+        {
             layout.Render(width, height);
 
-            Bitmap _bitmap = new Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            Size requiredSize = layout.GetRequiredSize();
+
+            Bitmap _bitmap = new Bitmap(requiredSize.Width, requiredSize.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
             {
                 Graphics gfx = Graphics.FromImage(_bitmap);
                 gfx.Clear(Color.White);
@@ -67,6 +69,20 @@ namespace InkPlatform.UserInterface
                 //font.Dispose();
             }
 
+            if (scaleToFit)
+            {
+                if (requiredSize.Width != width | requiredSize.Height != height)
+                {
+                    Bitmap _scaledBitmap = new Bitmap(_bitmap, new Size(width, height));
+                    _bitmap = _scaledBitmap;
+
+                    foreach(Element ele in layout.ElementList)
+                    {
+                        ele.ResizeToNewDimension(requiredSize, new Size(width, height));
+                    }
+                }
+            }
+            
             return _bitmap;
         }
 

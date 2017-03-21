@@ -108,5 +108,20 @@ namespace InkPlatform.UserInterface
             _size = size;
         }
 
+        public virtual void ResizeToNewDimension(Size originalDimension, Size newDimension)
+        {
+            Point newLocation = new Point(
+                    (int)((float)_location.X * ((float)newDimension.Width / (float)originalDimension.Width)),
+                    (int)((float)_location.Y * ((float)newDimension.Height / (float)originalDimension.Height))
+                );
+            _location = newLocation;
+
+            Size newSize = new Size(
+                    (int)((float)_size.Width * ((float)newDimension.Width / (float)originalDimension.Width)),
+                    (int)((float)_size.Height * ((float)newDimension.Height / (float)originalDimension.Height))
+                );
+            _size = newSize;
+        }
+
     }
 }

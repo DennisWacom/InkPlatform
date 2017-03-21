@@ -82,7 +82,8 @@ namespace InkPlatform.UserInterface
             get { return btnCancel; }
         }
 
-        
+        private Size _lastRenderedSize;
+
         public SignatureLayout(string name) : base (name)
         {
             _layoutType = LAYOUT_TYPE.SIGNATURE_LAYOUT;
@@ -281,7 +282,14 @@ namespace InkPlatform.UserInterface
                 if (Who != "") AddElement(txtWho);
                 if (Why != "") AddElement(txtWhy);
             }
+
+            _lastRenderedSize = new Size(width, height);
             
+        }
+
+        public override Size GetRequiredSize()
+        {
+            return _lastRenderedSize;
         }
     }
 }

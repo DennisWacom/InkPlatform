@@ -37,6 +37,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.signpadControl.BackColor = System.Drawing.Color.White;
+            this.signpadControl.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.signpadControl.DefaultInkWidth = 0.7F;
             this.signpadControl.DefaultPenColor = System.Drawing.Color.DarkBlue;
             this.signpadControl.InkingOnButton = false;
@@ -44,7 +45,7 @@
             this.signpadControl.Logging = false;
             this.signpadControl.Name = "signpadControl";
             this.signpadControl.ResizeCondition = InkPlatform.UserControls.SignpadControl.RESIZE_CONDITION.ACTUAL_SIZE;
-            this.signpadControl.Size = new System.Drawing.Size(283, 260);
+            this.signpadControl.Size = new System.Drawing.Size(537, 339);
             this.signpadControl.TabIndex = 0;
             this.signpadControl.SizeChanged += new System.EventHandler(this.signpadControl_SizeChanged);
             // 
@@ -52,13 +53,13 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 261);
+            this.ClientSize = new System.Drawing.Size(538, 340);
             this.Controls.Add(this.signpadControl);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "SignpadWindow";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "SignpadWindow";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.SignpadWindow_FormClosed);
             this.ResumeLayout(false);

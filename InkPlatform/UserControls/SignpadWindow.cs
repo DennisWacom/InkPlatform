@@ -205,7 +205,25 @@ namespace InkPlatform.UserControls
                 return result;
             }
 
-            DialogResult dr = this.ShowDialog(owner);
+            DialogResult dr;
+
+            if (Screen.AllScreens.Length > 1)
+            {
+                foreach (Screen scr in Screen.AllScreens)
+                {
+                    if (scr.Primary == true) continue;
+                  
+                    this.Left = scr.Bounds.Left + (scr.Bounds.Width / 2) - (this.Width / 2);
+                    this.Top = scr.Bounds.Top + (scr.Bounds.Height / 2) - (this.Height / 2);
+                    break;
+                }
+                dr = this.ShowDialog();
+            }
+            else
+            {
+                dr = this.ShowDialog(owner);
+            }
+           
             if (dr == DialogResult.Cancel)
             {
                 return (int)PEN_DEVICE_ERROR.USER_CANCELLED;

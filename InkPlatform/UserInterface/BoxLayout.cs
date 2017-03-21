@@ -51,6 +51,8 @@ namespace InkPlatform.UserInterface
         private int _centreRatio = 1;
         private int _rightRatio = 1;
 
+        private Size _lastRenderedSize;
+
         protected FLOW _flow = FLOW.RIGHT;
         /// <summary>
         /// Gets or sets the flow.
@@ -411,8 +413,15 @@ namespace InkPlatform.UserInterface
             {
                 removeGridLines();
             }
+
+            _lastRenderedSize = new Size(width, height);
         }
-        
+
+        public override Size GetRequiredSize()
+        {
+            return _lastRenderedSize;
+        }
+
         protected POSITION getPositionForElement(Element element)
         {
             if (boxDict[POSITION.TOP_LEFT].Contains(element)) return POSITION.TOP_LEFT;
@@ -554,7 +563,7 @@ namespace InkPlatform.UserInterface
             _bottomRatio = bottom;
             
         }
-
+        
         private string generateSafeName(string name)
         {
             if (GetElement(name) == null) return name;

@@ -1,0 +1,19 @@
+{
+  "TabletDimension": "0, 0",
+  "Inking": false,
+  "Vid": 1386,
+  "Pid": 164,
+  "VendorName": "Wacom",
+  "ProductModel": "STU-430",
+  "MaxPressureLevels": 1024,
+  "MaxReportRate": 200,
+  "HasScreen": true,
+  "SupportUsb": true,
+  "SupportSerial": false,
+  "ScreenDimension": "320, 200",
+  "DeviceType": 0,
+  "SensorResolution": 2540,
+  "ConnectionMode": 0,
+  "SupportColor": false,
+  "ConnectionId": ""
+}

@@ -50,7 +50,7 @@ namespace InkPlatform.Ink
             Size tabletSize = new Size(contextPenData.PenDevice.TabletWidth, contextPenData.PenDevice.TabletHeight);
 
             bitmap = new Bitmap(contextPenData.PenDevice.ScreenWidth, contextPenData.PenDevice.ScreenHeight);
-            GenerateImageResult result = GenerateImageFromInkData(out bitmap, contextPenData.PenData, tabletSize, bitmapSize, pen, backgroundColor);
+            GenerateImageResult result = GenerateImageFromInkData(out bitmap, contextPenData.PenData, bitmapSize, pen, backgroundColor);
             if (!encodeData) return result;
 
             string json = "";
@@ -73,7 +73,7 @@ namespace InkPlatform.Ink
                 {
                     multiplier = multiplier + 0.5f;
                     Size biggerSize = new Size((int)(bitmapSize.Width * multiplier), (int)(bitmapSize.Height * multiplier));
-                    result = GenerateImageFromInkData(out bitmap, contextPenData.PenData, tabletSize, biggerSize, pen, backgroundColor);
+                    result = GenerateImageFromInkDataResize(out bitmap, contextPenData.PenData, bitmapSize, biggerSize, pen, backgroundColor);
                     pictureSize = SteganographyHelper2.GetPictureSize(bitmap);
                 }
 
@@ -104,12 +104,11 @@ namespace InkPlatform.Ink
         /// </summary>
         /// <param name="bitmap">The bitmap.</param>
         /// <param name="inkData">The ink data.</param>
-        /// <param name="tabletCaptureSize">Size of the tablet capture.</param>
         /// <param name="bitmapSize">Size of the bitmap.</param>
         /// <param name="pen">The pen.</param>
         /// <param name="backgroundColor">Color of the background.</param>
         /// <returns>GenerateImageResult</returns>
-        public static GenerateImageResult GenerateImageFromInkData(out Bitmap bitmap, List<InkData> inkData, Size tabletCaptureSize, Size bitmapSize, Pen pen, Color backgroundColor)
+        public static GenerateImageResult GenerateImageFromInkData(out Bitmap bitmap, List<InkData> inkData, Size bitmapSize, Pen pen, Color backgroundColor)
         {
             SolidBrush brush = null;
             bitmap = new Bitmap(bitmapSize.Width, bitmapSize.Height);
@@ -128,17 +127,8 @@ namespace InkPlatform.Ink
 
                 for (int i = 1; i < inkData.Count; i++)
                 {
-                    PointF p1 = ConvertCoordinate(
-                            new Point((int)inkData[i - 1].x, (int)inkData[i - 1].y),
-                            tabletCaptureSize,
-                            bitmapSize
-                            );
-
-                    PointF p2 = ConvertCoordinate(
-                            new Point((int)inkData[i].x, (int)inkData[i].y),
-                            tabletCaptureSize,
-                            bitmapSize
-                            );
+                    PointF p1 = new Point((int)inkData[i - 1].x, (int)inkData[i - 1].y);
+                    PointF p2 = new Point((int)inkData[i].x, (int)inkData[i].y);
 
                     if (inkData[i - 1].contact && inkData[i].contact)
                     {
@@ -164,23 +154,89 @@ namespace InkPlatform.Ink
         }
 
         /// <summary>
+        /// Creates a bitmap image from the ink data. This is a primitive method
+        /// using simple drawlines between each pen data points and the image size generated
+        /// will be the same size as the screen size.
+        /// </summary>
+        /// <param name="bitmap">The bitmap.</param>
+        /// <param name="inkData">The ink data.</param>
+        /// <param name="originalSize">Size of the tablet capture.</param>
+        /// <param name="newSize">Size of the bitmap.</param>
+        /// <param name="pen">The pen.</param>
+        /// <param name="backgroundColor">Color of the background.</param>
+        /// <returns>GenerateImageResult</returns>
+        public static GenerateImageResult GenerateImageFromInkDataResize(out Bitmap bitmap, List<InkData> inkData, Size originalSize, Size newSize, Pen pen, Color backgroundColor)
+        {
+            SolidBrush brush = null;
+            bitmap = new Bitmap(newSize.Width, newSize.Height);
+
+            try
+            {
+                Graphics graphics = Graphics.FromImage(bitmap);
+
+                graphics.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
+                graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.High;
+                graphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+                graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+
+                brush = new SolidBrush(backgroundColor);
+                graphics.FillRectangle(brush, 0, 0, newSize.Width, newSize.Height);
+
+                for (int i = 1; i < inkData.Count; i++)
+                {
+                    
+                    PointF p1 = ConvertCoordinate(
+                            new Point((int)inkData[i - 1].x, (int)inkData[i - 1].y),
+                            originalSize,
+                            newSize
+                            );
+
+                    PointF p2 = ConvertCoordinate(
+                            new Point((int)inkData[i].x, (int)inkData[i].y),
+                            originalSize,
+                            newSize
+                            );
+                    
+                    if (inkData[i - 1].contact && inkData[i].contact)
+                    {
+                        graphics.DrawLine(pen, p1, p2);
+                    }
+
+                }
+
+            }
+            catch (Exception)
+            {
+                return GenerateImageResult.Error;
+            }
+            finally
+            {
+                if (brush != null)
+                {
+                    brush.Dispose();
+                }
+            }
+
+            return GenerateImageResult.Successful;
+        }
+
+        /// <summary>
         /// Creates a bitmap image from the ink data. This is a primitive method 
         /// using simple drawlines between each pen data points and the image size generated 
         /// will be the same size as the screen size. 
         /// </summary>
         /// <param name="bitmap">The bitmap.</param>
         /// <param name="inkData">The ink data.</param>
-        /// <param name="tabletCaptureSize">Size of the tablet capture.</param>
         /// <param name="bitmapSize">Size of the bitmap.</param>
         /// <param name="pen">The pen.</param>
         /// <param name="backgroundColor">Color of the background.</param>
         /// <param name="encodeData">if set to <c>true</c> [encode data].</param>
         /// <param name="autoResizeToFitData">if set to <c>true</c> [automatic resize to fit data].</param>
         /// <returns>Status of GenerateImageResult</returns>
-        public static GenerateImageResult GenerateImageFromInkData(out Bitmap bitmap, List<InkData> inkData, Size tabletCaptureSize, Size bitmapSize, Pen pen, Color backgroundColor, bool encodeData, bool autoResizeToFitData)
+        public static GenerateImageResult GenerateImageFromInkData(out Bitmap bitmap, List<InkData> inkData, Size bitmapSize, Pen pen, Color backgroundColor, bool encodeData, bool autoResizeToFitData)
         {
             bitmap = new Bitmap(bitmapSize.Width, bitmapSize.Height);
-            GenerateImageResult result = GenerateImageFromInkData(out bitmap, inkData, tabletCaptureSize, bitmapSize, pen, backgroundColor);
+            GenerateImageResult result = GenerateImageFromInkData(out bitmap, inkData, bitmapSize, pen, backgroundColor);
             if (!encodeData) return result;
 
             string json = "";
@@ -203,7 +259,7 @@ namespace InkPlatform.Ink
                 {
                     multiplier = multiplier + 0.5f;
                     Size biggerSize = new Size((int)(bitmapSize.Width * multiplier), (int)(bitmapSize.Height * multiplier));
-                    result = GenerateImageFromInkData(out bitmap, inkData, tabletCaptureSize, biggerSize, pen, backgroundColor);
+                    result = GenerateImageFromInkDataResize(out bitmap, inkData, bitmapSize, biggerSize, pen, backgroundColor);
                     pictureSize = SteganographyHelper2.GetPictureSize(bitmap);
                 }
 
@@ -238,10 +294,10 @@ namespace InkPlatform.Ink
         /// <param name="backgroundColor">Color of the background.</param>
         /// <param name="encodeData">if set to <c>true</c> [encode data].</param>
         /// <returns>Status of the GenerateImageResult</returns>
-        public static GenerateImageResult GenerateImageFromInkData(out Bitmap bmp, List<InkData> inkData, Size tabletCaptureSize, Size bitmapSize, Pen pen, Color backgroundColor, bool encodeData)
+        public static GenerateImageResult GenerateImageFromInkData(out Bitmap bmp, List<InkData> inkData, Size bitmapSize, Pen pen, Color backgroundColor, bool encodeData)
         {
             bmp = new Bitmap(bitmapSize.Width, bitmapSize.Height);
-            return GenerateImageFromInkData(out bmp, inkData, tabletCaptureSize, bitmapSize, pen, backgroundColor, encodeData, false);
+            return GenerateImageFromInkData(out bmp, inkData, bitmapSize, pen, backgroundColor, encodeData, false);
         }
 
         /// <summary>

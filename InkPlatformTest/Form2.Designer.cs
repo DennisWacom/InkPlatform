@@ -87,6 +87,7 @@
             this.cboDevices.Name = "cboDevices";
             this.cboDevices.Size = new System.Drawing.Size(131, 21);
             this.cboDevices.TabIndex = 14;
+            this.cboDevices.SelectedIndexChanged += new System.EventHandler(this.cboDevices_SelectedIndexChanged);
             // 
             // btnScanDevice
             // 

@@ -5,6 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using wgssSTU;
 using InkPlatform.Hardware.Wacom;
+using System.Reflection;
+using System.IO;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace InkPlatform.Hardware
 {
@@ -40,5 +44,6 @@ namespace InkPlatform.Hardware
 
             return results;   
         }
+        
     }
 }

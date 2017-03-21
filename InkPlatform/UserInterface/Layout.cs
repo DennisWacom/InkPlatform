@@ -308,6 +308,29 @@ namespace InkPlatform.UserInterface
             return null;
         }
 
+        public virtual Size GetRequiredSize()
+        {
+            int maxX = 0;
+            int maxY = 0;
+
+            foreach(Element ele in ElementList)
+            {
+                System.Drawing.Rectangle rect = ele.Bounds;
+                if(ele.ElementType == Element.ELEMENT_TYPE.TEXT)
+                {
+                    ElementText txt = (ElementText)ele;
+                    rect = txt.CalculateBounds();
+                }
+
+                int x = rect.X + rect.Width;
+                int y = rect.Y + rect.Height;
+                if (x > maxX) maxX = x;
+                if (y > maxY) maxY = y;
+            }
+
+            return new Size(maxX, maxY);
+        }
+
         public virtual void Render(int width, int height)
         {
             //virtual function to be called before rendering of the bitmap by the 

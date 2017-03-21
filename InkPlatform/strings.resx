@@ -192,4 +192,10 @@
   <data name="LAYOUT_FAIL" xml:space="preserve">
     <value>Read Layout File Failed</value>
   </data>
+  <data name="WINTAB_DEVICE" xml:space="preserve">
+    <value>Wintab Device</value>
+  </data>
+  <data name="USB" xml:space="preserve">
+    <value>USB</value>
+  </data>
 </root>

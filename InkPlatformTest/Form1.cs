@@ -115,7 +115,10 @@ namespace InkPlatformTest
             {
                 cboDevices.SelectedIndex = 0;
                 currentPenDevice = penDevices[0];
-                resizeForm(currentPenDevice);
+                if(currentPenDevice.DeviceType == DEVICE_TYPE.SIGNPAD)
+                {
+                    resizeForm(currentPenDevice);
+                }
             }
             else
             {
@@ -141,11 +144,22 @@ namespace InkPlatformTest
 
         private void resizeForm(PenDevice signpad)
         {
-            signpadControl1.Width = signpad.ScreenDimension.Width;
-            signpadControl1.Height = signpad.ScreenDimension.Height;
-            txtLog.Location = new Point(txtLog.Location.X, signpadControl1.Location.Y + signpadControl1.Size.Height + 10);
+            //signpadControl1.Width = signpad.ScreenDimension.Width;
+            //signpadControl1.Height = signpad.ScreenDimension.Height;
+            signpadControl1.resizeControl(signpad);
+            txtLog.Location = new Point(txtLog.Location.X, signpadControl1.Location.Y + signpadControl1.Size.Height + 1);
             txtLog.Width = signpadControl1.Width;
-            ClientSize = new Size(signpadControl1.Width, txtLog.Location.Y + txtLog.Size.Height);
+
+            signpadControl1.Anchor = AnchorStyles.Left | AnchorStyles.Top;
+            txtLog.Anchor = AnchorStyles.Left | AnchorStyles.Top;
+
+            ClientSize = new Size(
+                signpadControl1.Width + (signpadControl1.Left * 2), 
+                txtLog.Location.Y + txtLog.Size.Height);
+
+            signpadControl1.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
+            txtLog.Anchor = AnchorStyles.Left | AnchorStyles.Bottom | AnchorStyles.Right;
+
             //MessageBox.Show(ClientSize.Width.ToString() + " - " + signpadControl1.Width.ToString());
         }
 
@@ -171,12 +185,11 @@ namespace InkPlatformTest
 
             signpadControl1.SetInking(false);
 
-            Bitmap bitmap = new Bitmap(currentPenDevice.ScreenDimension.Width, currentPenDevice.ScreenDimension.Height);
+            Bitmap bitmap = new Bitmap(signpadControl1.Width, signpadControl1.Height);
             if (InkProcessor.GenerateImageFromInkData(
                 out bitmap,
                 signpadControl1.PenData,
-                currentPenDevice.TabletDimension,
-                currentPenDevice.ScreenDimension, 
+                signpadControl1.Size, 
                 signpadControl1.GetDefaultPen(),
                 Color.White,
                 true,
@@ -198,6 +211,18 @@ namespace InkPlatformTest
             if(cboDevices.Items.Count > 0)
             {
                 currentPenDevice = penDevices[cboDevices.SelectedIndex];
+                if(currentPenDevice.DeviceType == DEVICE_TYPE.SIGNPAD)
+                {
+                    signpadControl1.ResizeCondition = SignpadControl.RESIZE_CONDITION.ACTUAL_SIZE;
+                }
+                else if(currentPenDevice.DeviceType == DEVICE_TYPE.PEN_TABLET)
+                {
+                    signpadControl1.ResizeCondition = SignpadControl.RESIZE_CONDITION.ASPECT_RATIO_WIDTH;
+                }
+                else
+                {
+                    signpadControl1.ResizeCondition = SignpadControl.RESIZE_CONDITION.NONE;
+                }
                 resizeForm(currentPenDevice);
             }
             else
@@ -208,6 +233,12 @@ namespace InkPlatformTest
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            if(Screen.AllScreens.Length > 1)
+            {
+                this.Left = Screen.AllScreens[1].Bounds.Left + (Screen.AllScreens[1].Bounds.Width / 2) - (this.Width / 2);
+                this.Top = Screen.AllScreens[1].Bounds.Top + (Screen.AllScreens[1].Bounds.Height / 2) - (this.Height / 2);
+            }
+
             signpadControl1.Logging = true;
             signpadControl1.LogFunction = Log;
             scan();
@@ -217,7 +248,10 @@ namespace InkPlatformTest
         {
             if (currentPenDevice == null) return;
             Layout layout = GetColorSignatureLayout();
-            
+
+            signpadControl1.DonePressed = SignatureDone;
+            signpadControl1.SetInking(true);
+
             int result = signpadControl1.DisplayLayout(layout, currentPenDevice);
             if(result != 0)
             {
@@ -356,5 +390,6 @@ namespace InkPlatformTest
         {
             signpadControl1.Disconnect();
         }
+        
     }
 }

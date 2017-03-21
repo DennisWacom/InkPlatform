@@ -12,11 +12,12 @@ using wgssSTU;
 namespace InkPlatform.Hardware.Wacom
 {
     
-    public class WacomSignpad : PenDevice
+    public class WacomSignpad : Signpad
     {
         public static int DEFAULT_BAUD_RATE = 128000;
         public static new ushort VID = 0x056a;
         public static new string VENDOR_NAME = strings.WACOM;
+        public static string VID_STRING = "056A";
         
         int _retry_times = 5;
         int _retry_wait = 2000;
@@ -268,9 +269,7 @@ namespace InkPlatform.Hardware.Wacom
             }
             return "";
         }
-
         
-
         private string GetConnectUsbErrorMessage(int errorCode)
         {
             switch ((ErrorCode)errorCode)
@@ -303,10 +302,10 @@ namespace InkPlatform.Hardware.Wacom
                 _tabletDimension = GetTabletDimension();
                 return _tabletDimension;
             }
-            set
-            {
-                throw new NotSupportedException();
-            }
+            //set
+            //{
+                //throw new NotSupportedException();
+            //}
         }
 
         private Size GetTabletDimension()

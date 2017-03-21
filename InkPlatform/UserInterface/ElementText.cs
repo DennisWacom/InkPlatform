@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace InkPlatform.UserInterface
 {
@@ -99,6 +100,32 @@ namespace InkPlatform.UserInterface
             Brush = Brushes.Black;
             VAlign = StringAlignment.Center;
             HAlign = StringAlignment.Center;
+        }
+
+        public Rectangle CalculateBounds()
+        {
+            Size intendedSize = new Size((int)this.Bounds.Width, (int)this.Bounds.Height);
+            Size calSize = TextRenderer.MeasureText(this.Text, this.TextFont, intendedSize);
+
+            Rectangle result = this.Bounds;
+
+            if (intendedSize.Width == 0 && intendedSize.Height == 0)
+            {
+                intendedSize = calSize;
+                result = new Rectangle(this.Bounds.X, this.Bounds.Y, intendedSize.Width, intendedSize.Height);
+            }
+
+            if (this.AutoResizeText)
+            {
+                while (calSize.Width > intendedSize.Width || calSize.Height > intendedSize.Height)
+                {
+                    this.FontSize = this.FontSize - 1;
+                    calSize = TextRenderer.MeasureText(this.Text, this.TextFont, intendedSize);
+                    result = new Rectangle(this.Bounds.X, this.Bounds.Y, calSize.Width, calSize.Height);
+                }
+            }
+
+            return result;
         }
 
     }

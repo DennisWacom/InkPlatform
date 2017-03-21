@@ -40,9 +40,14 @@
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Wacom STU SDK\COM\bin\Win32\Interop.wgssSTU.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
@@ -57,6 +62,15 @@
     <Compile Include="Hardware\PenDevice.cs" />
     <Compile Include="Hardware\DeviceScanner.cs" />
     <Compile Include="Hardware\IDeviceScanner.cs" />
+    <Compile Include="Hardware\Signpad.cs" />
+    <Compile Include="Hardware\Wacom\DTK2241.cs" />
+    <Compile Include="Hardware\Wacom\DTU2231.cs" />
+    <Compile Include="Hardware\Wacom\DTU1931.cs" />
+    <Compile Include="Hardware\Wacom\DTK1651.cs" />
+    <Compile Include="Hardware\Wacom\DTU1631.cs" />
+    <Compile Include="Hardware\Wacom\DTU1141.cs" />
+    <Compile Include="Hardware\Wacom\DTU1031X.cs" />
+    <Compile Include="Hardware\Wacom\DTU1031.cs" />
     <Compile Include="Hardware\Wacom\STU300.cs" />
     <Compile Include="Hardware\Wacom\STU430.cs" />
     <Compile Include="Hardware\Wacom\STU430V.cs" />
@@ -66,6 +80,8 @@
     <Compile Include="Hardware\Wacom\STU540.cs" />
     <Compile Include="Hardware\Wacom\WacomDeviceScanner.cs" />
     <Compile Include="Hardware\Wacom\WacomSignpad.cs" />
+    <Compile Include="Hardware\Wacom\WacomWintabDevice.cs" />
+    <Compile Include="Hardware\WintabDevice.cs" />
     <Compile Include="InkInterface.cs" />
     <Compile Include="Ink\ContextPenData.cs" />
     <Compile Include="Steganography\Crypto.cs" />
@@ -107,6 +123,52 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Hardware\Wacom\DTK-1651.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Hardware\Wacom\DTK-2241.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Hardware\Wacom\DTU-1031.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Hardware\Wacom\DTU-1031X.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Hardware\Wacom\DTU-1141.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Hardware\Wacom\DTU-1631.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Hardware\Wacom\DTU-1931.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Hardware\Wacom\DTU-2231.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Hardware\Wacom\STU-300.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Hardware\Wacom\STU-430.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Hardware\Wacom\STU-430V.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Hardware\Wacom\STU-500.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Hardware\Wacom\STU-520.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Hardware\Wacom\STU-530.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Hardware\Wacom\STU-540.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Utilities\getSerialPorts.exe">
@@ -124,6 +186,12 @@
     <EmbeddedResource Include="UserControls\SignpadWindow.resx">
       <DependentUpon>SignpadWindow.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\WintabDN\WintabDN\WintabDN.csproj">
+      <Project>{73eae30a-60b9-43a5-ad81-9b05873e405c}</Project>
+      <Name>WintabDN</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

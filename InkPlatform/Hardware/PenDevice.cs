@@ -9,13 +9,14 @@ using InkPlatform.UserInterface;
 using InkPlatform.Ink;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
+using System.Windows.Forms;
 
 namespace InkPlatform.Hardware
 {
     public enum DEVICE_TYPE { SIGNPAD, PEN_TABLET, PEN_DISPLAY, PEN_COMPUTER };
     public enum CONNECTION_MODE { USB, SERIAL, WIRELESS, BLUETOOTH };
     
-    public enum PEN_DEVICE_ERROR { NONE, DEVICE_BUSY, CANNOT_CONNECT, INIT_FAIL, NULL_PARAM, LAYOUT_NOT_FOUND, NOT_SUPPORTED, ALREADY_CONNECTED, NOT_CONNECTED, DISPLAY_FAIL, USER_CANCELLED, LAYOUT_FAIL};
+    public enum PEN_DEVICE_ERROR { NONE, DEVICE_BUSY, CANNOT_CONNECT, INIT_FAIL, NULL_PARAM, LAYOUT_NOT_FOUND, NOT_SUPPORTED, ALREADY_CONNECTED, NOT_CONNECTED, DISPLAY_FAIL, USER_CANCELLED, LAYOUT_FAIL, UNSPECIFIED};
 
     public abstract class PenDevice
     {
@@ -76,35 +77,42 @@ namespace InkPlatform.Hardware
             set { _productModel = value; }
         }
 
-        public int MaxPressureLevels
+        public virtual int MaxPressureLevels
         {
             get { return _maxPressureLevels; }
+            set { _maxPressureLevels = value; }
         }
-        public int MaxReportRate
+        public virtual int MaxReportRate
         {
             get { return _maxReportRate; }
+            set { _maxReportRate = value; }
         }
-        public bool HasScreen
+        public virtual bool HasScreen
         {
             get { return _hasScreen; }
+            set { _hasScreen = value; }
         }
-        public bool SupportUsb
+        public virtual bool SupportUsb
         {
             get { return _supportUsb; }
+            set { _supportUsb = value; }
         }
-        public bool SupportSerial
+        public virtual bool SupportSerial
         {
             get { return _supportSerial; }
+            set { _supportSerial = value; }
         }
-        public Size ScreenDimension
+        public virtual Size ScreenDimension
         {
             get { return _screenDimension; }
+            set { _screenDimension = value; }
         }
         public DEVICE_TYPE DeviceType
         {
             get { return _deviceType; }
+            set { _deviceType = value; }
         }
-        public int SensorResolution
+        public virtual int SensorResolution
         {
             get { return _sensorResolution; }
             set { _sensorResolution = value; }
@@ -193,7 +201,7 @@ namespace InkPlatform.Hardware
                 _serialNo = value;
             }
         }
-        public CONNECTION_MODE ConnectionMode
+        public virtual CONNECTION_MODE ConnectionMode
         {
             get { return _connectionMode; }
             set { _connectionMode = value; }
@@ -203,7 +211,7 @@ namespace InkPlatform.Hardware
             get { return _tabletDimension; }
             set { _tabletDimension = value; }
         }
-        public bool SupportColor
+        public virtual bool SupportColor
         {
             get { return _supportColor; }
             set { _supportColor = value; }
@@ -212,6 +220,7 @@ namespace InkPlatform.Hardware
         public string ConnectionId
         {
             get { return _connectionId; }
+            set { _connectionId = value; }
         }
 
         //public abstract int DisplayLayout(Layout layout);

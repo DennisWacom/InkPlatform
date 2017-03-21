@@ -35,10 +35,11 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.Name = "SignpadControl";
+            this.LocationChanged += new System.EventHandler(this.SignpadControl_LocationChanged);
+            this.SizeChanged += new System.EventHandler(this.SignpadControl_SizeChanged);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.SignpadControl_Paint);
-            this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.SignpadControl_MouseClick);
-            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.SignpadControl_MouseMove);
             this.ResumeLayout(false);
 
         }

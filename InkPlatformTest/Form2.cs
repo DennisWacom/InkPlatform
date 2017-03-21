@@ -211,5 +211,17 @@ namespace InkPlatformTest
         {
             scan();
         }
+
+        private void cboDevices_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cboDevices.Items.Count > 0)
+            {
+                currentPenDevice = penDevices[cboDevices.SelectedIndex];
+            }
+            else
+            {
+                currentPenDevice = null;
+            }
+        }
     }
 }

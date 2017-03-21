@@ -250,6 +250,15 @@ namespace InkPlatform {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to USB.
+        /// </summary>
+        internal static string USB {
+            get {
+                return ResourceManager.GetString("USB", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to User Cancelled.
         /// </summary>
         internal static string USER_CANCELLED {
@@ -264,6 +273,15 @@ namespace InkPlatform {
         internal static string WACOM {
             get {
                 return ResourceManager.GetString("WACOM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wintab Device.
+        /// </summary>
+        internal static string WINTAB_DEVICE {
+            get {
+                return ResourceManager.GetString("WINTAB_DEVICE", resourceCulture);
             }
         }
         

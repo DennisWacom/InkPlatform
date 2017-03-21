@@ -1,0 +1,19 @@
+{
+  "MaxPressureLevels": 1024,
+  "TabletDimension": "22095, 13959",
+  "Vid": 1386,
+  "Pid": 251,
+  "VendorName": "Wacom",
+  "ProductModel": "DTU-1031",
+  "MaxReportRate": 200,
+  "HasScreen": true,
+  "SupportUsb": true,
+  "SupportSerial": false,
+  "ScreenDimension": "1280, 800",
+  "DeviceType": 2,
+  "SensorResolution": 2540,
+  "Inking": false,
+  "ConnectionMode": 0,
+  "SupportColor": true,
+  "ConnectionId": ""
+}

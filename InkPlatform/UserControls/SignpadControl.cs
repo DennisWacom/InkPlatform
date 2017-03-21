@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -29,6 +30,29 @@ namespace InkPlatform.UserControls
         List<Layout> _allLayouts = new List<UserInterface.Layout>();
         Bitmap _currentBitmap;
         PenDevice _currentPenDevice;
+
+        protected PenDevice CurrentPenDevice
+        {
+            get { return _currentPenDevice; }
+            set
+            {
+                if(_currentPenDevice != null)
+                {
+                    _currentPenDevice.OnPenData = null;
+                    this.MouseMove -= this.SignpadControl_MouseMove;
+                    this.MouseClick -= this.SignpadControl_MouseClick;
+                }
+                
+                _currentPenDevice = value;
+                
+                if(_currentPenDevice != null)
+                {
+                    this.MouseMove += this.SignpadControl_MouseMove;
+                    this.MouseClick += this.SignpadControl_MouseClick;
+                }
+            }
+        }
+        
         Graphics gfx;
         bool _inking = true;
         string _connectionId = "";
@@ -186,7 +210,16 @@ namespace InkPlatform.UserControls
                 {
                     _connectionId = penDevice.ConnectionId;
                     Log("Set current pen device to " + penDevice.ProductModel);
-                    _currentPenDevice = penDevice;
+                    CurrentPenDevice = penDevice;
+                    
+                    if(CurrentPenDevice.DeviceType == DEVICE_TYPE.SIGNPAD)
+                    {
+                        _resizeCondition = RESIZE_CONDITION.ACTUAL_SIZE;
+                    }
+                    else
+                    {
+                        _resizeCondition = RESIZE_CONDITION.ASPECT_RATIO_WIDTH;
+                    }
                 }
                 return result;
             }
@@ -197,18 +230,18 @@ namespace InkPlatform.UserControls
             Log("Set inking = " + (inking ? "yes" : "no"));
             _inking = inking;
 
-            if(_currentPenDevice != null)
+            if(CurrentPenDevice != null)
             {
-                _currentPenDevice.Inking = inking;
+                CurrentPenDevice.Inking = inking;
             }
         }
 
         public void Reset()
         {
             Log("Reset");
-            if(_currentPenDevice != null)
+            if(CurrentPenDevice != null)
             {
-                _currentPenDevice.Reset();
+                CurrentPenDevice.Reset();
             }
 
             Log("Clear pen data");
@@ -217,18 +250,34 @@ namespace InkPlatform.UserControls
             BackgroundImage = null;
             BackColor = Color.White;
         }
+        
+        protected Bitmap ResizeBitmap(Bitmap original, Size newSize)
+        {
+            Bitmap result = new Bitmap(newSize.Width, newSize.Height);
+            Graphics g = Graphics.FromImage(result);
+            
+            g.DrawImage(original, new Rectangle(0, 0, newSize.Width, newSize.Height), 
+                0, 0, original.Width, original.Height, 
+                GraphicsUnit.Pixel);
+
+            return result;
+        }
 
         public int DisplayBitmap(Bitmap bitmap, PenDevice penDevice)
         {
             Log("Display bitmap");
+            //Allow signpad control to display regardless if the pen device has screen or not
+            //If the pen device does not has screen, still display on the computer screen, but not on the pen device
+            /* 
             if (!penDevice.HasScreen)
             {
                 Log("Pen device does not support display bitmap");
                 return (int)PEN_DEVICE_ERROR.NOT_SUPPORTED;
             }
-            
+            */
+
             //make sure pendevice is connected
-            if(Connect(penDevice) != (int)PEN_DEVICE_ERROR.NONE)
+            if (Connect(penDevice) != (int)PEN_DEVICE_ERROR.NONE)
             {
                 return (int)PEN_DEVICE_ERROR.CANNOT_CONNECT;
             }
@@ -236,30 +285,50 @@ namespace InkPlatform.UserControls
             Log("Clear pen device onPenData event handler");
             penDevice.OnPenData = null;
             SetInking(false);
-           
+
             //Initialise the pendata for this layout
             Log("Reset pen data");
             _penData = new List<InkData>();
             _contextPenData = null;
 
-            int result = penDevice.DisplayBitmap(bitmap);
 
-            if(result != (int)PEN_DEVICE_ERROR.NONE)
+            int result = (int)PEN_DEVICE_ERROR.NONE;
+            //Only call pen device to display bitmap if it is a sign pad with screen
+            if (penDevice.DeviceType == DEVICE_TYPE.SIGNPAD && penDevice.HasScreen == true)
+            {
+                result = penDevice.DisplayBitmap(bitmap);
+            }
+
+            if (result != (int)PEN_DEVICE_ERROR.NONE)
             {
                 return result;
             }
-            
+
             this.SuspendLayout();
 
             //Create the bitmap from the layout
             Log("Set background image to bitmap");
+            
             BackgroundImage = bitmap;
             BackgroundImageLayout = ImageLayout.Stretch;
             _currentBitmap = bitmap;
 
-            //Resize control according to aspect ratio of pen device screen
-            resizeControl(penDevice);
+            //this.Size = bitmap.Size;
 
+            //Resize control according to aspect ratio of pen device screen
+            //Deprecated. Control will resize according to size of bitmap
+            /*
+            if ((penDevice.DeviceType == DEVICE_TYPE.SIGNPAD && penDevice.HasScreen == true))
+            {
+                resizeControl(penDevice);
+            }
+            else if(penDevice.DeviceType == DEVICE_TYPE.PEN_TABLET)
+            {
+                ResizeCondition = RESIZE_CONDITION.ASPECT_RATIO_WIDTH;
+                resizeControl(penDevice);
+            }
+            */
+            
             this.ResumeLayout();
 
             SetInking(true);
@@ -273,7 +342,7 @@ namespace InkPlatform.UserControls
         public int DisplayLayouts(List<Layout> layoutList, PenDevice penDevice, int initialLayout)
         {
             Log("Display layout list");
-            if (!penDevice.HasScreen) return (int)PEN_DEVICE_ERROR.NOT_SUPPORTED;
+            //if (!penDevice.HasScreen) return (int)PEN_DEVICE_ERROR.NOT_SUPPORTED;
 
             if (layoutList != null || layoutList.Count > 0)
             {
@@ -295,38 +364,51 @@ namespace InkPlatform.UserControls
         public int DisplayLayout(Layout layout, PenDevice penDevice)
         {
             Log("Display layout: " + layout.Name);
-            if (!penDevice.HasScreen) return (int)PEN_DEVICE_ERROR.NOT_SUPPORTED;
+            //if (!penDevice.HasScreen) return (int)PEN_DEVICE_ERROR.NOT_SUPPORTED;
 
             _currentLayout = layout;
+            CurrentPenDevice = penDevice;
 
-            Bitmap bmp = LayoutManager.CreateBitmap(layout, penDevice.ScreenDimension.Width, penDevice.ScreenDimension.Height, penDevice.SupportColor);
+            if(penDevice.DeviceType == DEVICE_TYPE.SIGNPAD || penDevice.DeviceType == DEVICE_TYPE.PEN_TABLET)
+            {
+                resizeControl(penDevice);
+            }
+            
+            Size bmpDimension = this.Size;
+            
+            Bitmap bmp = LayoutManager.CreateBitmap(layout, bmpDimension.Width, bmpDimension.Height, penDevice.SupportColor);
             ReassignClickEvents();
             return DisplayBitmap(bmp, penDevice);
             
         }
         
-        private void resizeControl(PenDevice penDevice)
+        public void resizeControl(PenDevice penDevice)
         {
             Log("Resize control");
-            if (_resizeCondition == RESIZE_CONDITION.ACTUAL_SIZE)
+
+            Size controlDimension = penDevice.TabletDimension;
+            if(penDevice.DeviceType == DEVICE_TYPE.SIGNPAD && penDevice.HasScreen)
+            {
+                controlDimension = penDevice.ScreenDimension;
+            }
+
+            if(_resizeCondition == RESIZE_CONDITION.ACTUAL_SIZE)
             {
                 Log("Actual size");
-                this.Width = penDevice.ScreenDimension.Width;
-                this.Height = penDevice.ScreenDimension.Height;
+                this.Width = controlDimension.Width;
+                this.Height = controlDimension.Height;
             }
             else if (_resizeCondition == RESIZE_CONDITION.ASPECT_RATIO_WIDTH)
             {
                 Log("Aspect ratio width");
-                float ratio = penDevice.ScreenDimension.Height / penDevice.ScreenDimension.Width;
-                this.Width = penDevice.ScreenDimension.Width;
-                this.Height = (int)(ratio * penDevice.ScreenDimension.Width);
+                float ratio = (float)controlDimension.Height / (float)controlDimension.Width;
+                this.Height = (int)(ratio * Width);
             }
             else if (_resizeCondition == RESIZE_CONDITION.ASPECT_RATIO_HEIGHT)
             {
                 Log("Aspect ration height");
-                float ratio = penDevice.ScreenDimension.Width / penDevice.ScreenDimension.Height;
-                this.Height = penDevice.ScreenDimension.Height;
-                this.Width = (int)(ratio * penDevice.ScreenDimension.Height);
+                float ratio = (float)controlDimension.Width / (float)controlDimension.Height;
+                this.Width = (int)(ratio * Height);
             }
 
             resetGraphics();
@@ -360,7 +442,7 @@ namespace InkPlatform.UserControls
             if (!carryOn) return;
 
             this.Invalidate();
-            if(_currentPenDevice != null)
+            if(CurrentPenDevice != null)
             {
                 RefreshScreen();
             }
@@ -371,7 +453,7 @@ namespace InkPlatform.UserControls
             Log("Done event handler");
 
             Log("Save Context Pen Data");
-            _contextPenData = new ContextPenData(_currentPenDevice, _penData, _currentLayout);
+            _contextPenData = new ContextPenData(CurrentPenDevice, _penData, _currentLayout);
 
             bool carryOn = true;
             if(DonePressed != null)
@@ -414,11 +496,11 @@ namespace InkPlatform.UserControls
 
         public void RefreshScreen()
         {
-            if(_currentPenDevice != null)
+            if(CurrentPenDevice != null)
             {
                 if(_currentBitmap != null)
                 {
-                    DisplayBitmap(_currentBitmap, _currentPenDevice);
+                    DisplayBitmap(_currentBitmap, CurrentPenDevice);
                 }
             }
         }
@@ -427,20 +509,20 @@ namespace InkPlatform.UserControls
         {
             Log("Disconnect");
             ClearScreen();
-            if(_currentPenDevice != null)
+            if(CurrentPenDevice != null)
             {
                 _connectionId = "";
-                _currentPenDevice.Disconnect();
-                _currentPenDevice = null;
+                CurrentPenDevice.Disconnect();
+                CurrentPenDevice = null;
             }
         }
 
         public void ClearScreen()
         {
             Log("Clear Screen");
-            if(_currentPenDevice != null)
+            if(CurrentPenDevice != null)
             {
-                _currentPenDevice.ClearScreen();
+                CurrentPenDevice.ClearScreen();
             }
             _currentLayout = null;
             BackgroundImage = null;
@@ -457,7 +539,7 @@ namespace InkPlatform.UserControls
                 return (int)PEN_DEVICE_ERROR.LAYOUT_NOT_FOUND;
             }
 
-            if (_currentPenDevice == null)
+            if (CurrentPenDevice == null)
             {
                 Log("Current pen device is null");
                 return (int)PEN_DEVICE_ERROR.CANNOT_CONNECT;
@@ -467,7 +549,7 @@ namespace InkPlatform.UserControls
             {
                 if(layout.Name == layoutName)
                 {
-                    return DisplayLayout(layout, _currentPenDevice);
+                    return DisplayLayout(layout, CurrentPenDevice);
                 }
             }
 
@@ -481,7 +563,8 @@ namespace InkPlatform.UserControls
             // Calculate the size and cache the inking pen.
             SizeF s = this.AutoScaleDimensions;
 
-            Pen _penInk = new Pen(DefaultPenColor, DefaultInkWidth / 25.4F * ((s.Width + s.Height) / 2F));
+            //Pen _penInk = new Pen(DefaultPenColor, DefaultInkWidth / 25.4F * ((s.Width + s.Height) / 2F));
+            Pen _penInk = new Pen(DefaultPenColor, DefaultInkWidth);
             _penInk.StartCap = _penInk.EndCap = System.Drawing.Drawing2D.LineCap.Round;
             _penInk.LineJoin = System.Drawing.Drawing2D.LineJoin.Round;
 
@@ -509,6 +592,16 @@ namespace InkPlatform.UserControls
 
             try
             {
+                if (fromPoint.X < 0) fromPoint.X = 0;
+                if (fromPoint.Y < 0) fromPoint.Y = 0;
+                if (fromPoint.X > Size.Width) fromPoint.X = Size.Width;
+                if (fromPoint.Y > Size.Height) fromPoint.Y = Size.Height;
+
+                if (toPoint.X < 0) toPoint.X = 0;
+                if (toPoint.Y < 0) toPoint.Y = 0;
+                if (toPoint.X > Size.Width) toPoint.X = Size.Width;
+                if (toPoint.Y > Size.Height) toPoint.Y = Size.Height;
+
                 gfx.DrawLine(pen, fromPoint, toPoint);
             }
             catch (Exception)
@@ -522,11 +615,27 @@ namespace InkPlatform.UserControls
         private void processPenData(InkData inkData)
         {
             Log("Process pen data", 2);
-            if (_currentPenDevice == null) return;
+            if (CurrentPenDevice == null) return;
             if (_currentLayout == null) return;
             if (!_inking) return;
 
-            CurrPenStatus = inkData.Duplicate(_currentPenDevice.TabletDimension, _currentPenDevice.ScreenDimension);
+            if(CurrentPenDevice.DeviceType == DEVICE_TYPE.SIGNPAD)
+            {
+                CurrPenStatus = inkData.Duplicate(CurrentPenDevice.TabletDimension, CurrentPenDevice.ScreenDimension);
+            }
+            else
+            {
+                CurrPenStatus = inkData.Duplicate();
+                Point currPenPosition = new Point((int)CurrPenStatus.x, (int)CurrPenStatus.y);
+                currPenPosition = this.PointToClient(currPenPosition);
+                if(currPenPosition.X < 0 || currPenPosition.Y < 0 || currPenPosition.X > this.Width || currPenPosition.Y > this.Height)
+                {
+                    //return;
+                }
+                CurrPenStatus.x = (uint)currPenPosition.X;
+                CurrPenStatus.y = (uint)currPenPosition.Y;
+            }
+
             
             ElementButton button = _currentLayout.GetButtonOnPoint(CurrPenStatus.coordinates);
             if (button != null)
@@ -553,8 +662,10 @@ namespace InkPlatform.UserControls
             {
                 //pen is on button/image and InkingOnButton is true, then draw ink, else do nothing
                 if (InkingOnButton)
-                {                   
-                    _penData.Add(CurrPenStatus.Duplicate(_currentPenDevice.ScreenDimension, _currentPenDevice.TabletDimension));
+                {
+                    //Change to save only screen dimension as of the control only                   
+                    //_penData.Add(CurrPenStatus.Duplicate(_currentPenDevice.ScreenDimension, _currentPenDevice.TabletDimension));
+                    _penData.Add(CurrPenStatus);
                     if (CurrPenStatus.contact && PrevPenStatus != null)
                     {
                         drawInk(DefaultPen, PrevPenStatus.coordinates, CurrPenStatus.coordinates);
@@ -564,7 +675,9 @@ namespace InkPlatform.UserControls
             else
             {
                 //pen is not on button/image, just draw ink
-                _penData.Add(CurrPenStatus.Duplicate(_currentPenDevice.ScreenDimension, _currentPenDevice.TabletDimension));
+                ////Change to save only screen dimension as of the control only 
+                //_penData.Add(CurrPenStatus.Duplicate(_currentPenDevice.ScreenDimension, _currentPenDevice.TabletDimension));
+                _penData.Add(CurrPenStatus);
                 if (CurrPenStatus.contact && PrevPenStatus != null)
                 {
                     drawInk(DefaultPen, PrevPenStatus.coordinates, CurrPenStatus.coordinates);
@@ -636,11 +749,17 @@ namespace InkPlatform.UserControls
 
         private void SignpadControl_MouseMove(object sender, MouseEventArgs e)
         {
-            if (_currentPenDevice == null) return;
+            if (CurrentPenDevice == null) return;
             if (_currentLayout == null) return;
-            
-            Point pt = InkProcessor.ConvertCoordinate(e.Location, ClientSize, _currentPenDevice.ScreenDimension);
 
+            if (CurrentPenDevice.DeviceType != DEVICE_TYPE.SIGNPAD) return;
+
+            Point pt = e.Location;
+            if(CurrentPenDevice.DeviceType == DEVICE_TYPE.SIGNPAD)
+            {
+                pt = InkProcessor.ConvertCoordinate(e.Location, ClientSize, CurrentPenDevice.ScreenDimension);
+            }
+            
             if (_currentLayout != null && _currentLayout.ButtonList != null)
             {
                 foreach (ElementButton btn in _currentLayout.ButtonList)
@@ -671,11 +790,17 @@ namespace InkPlatform.UserControls
         private void SignpadControl_MouseClick(object sender, MouseEventArgs e)
         {
             Log("SignpadControl mouse click");
-            if (_currentPenDevice == null) return;
+            if (CurrentPenDevice == null) return;
             if (_currentLayout == null) return;
-            
-            Point pt = InkProcessor.ConvertCoordinate(e.Location, ClientSize, _currentPenDevice.ScreenDimension);
 
+            if (CurrentPenDevice.DeviceType != DEVICE_TYPE.SIGNPAD) return;
+
+            Point pt = e.Location;
+            if(CurrentPenDevice.DeviceType == DEVICE_TYPE.SIGNPAD)
+            {
+                pt = InkProcessor.ConvertCoordinate(e.Location, ClientSize, CurrentPenDevice.ScreenDimension);
+            }
+            
             if (_currentLayout != null && _currentLayout.ButtonList != null)
             {
                 foreach (ElementButton btn in _currentLayout.ButtonList)
@@ -717,7 +842,7 @@ namespace InkPlatform.UserControls
         private void SignpadControl_Paint(object sender, PaintEventArgs e)
         {
             Log("Repaint");
-            if (_currentPenDevice == null) return;
+            if (CurrentPenDevice == null) return;
 
             try
             {
@@ -738,11 +863,11 @@ namespace InkPlatform.UserControls
                             if (!isDown)
                             {
                                 isDown = true;
-                                prev = InkProcessor.ConvertCoordinate(_penData[i].coordinates, _currentPenDevice.TabletDimension, ClientSize);
+                                prev = InkProcessor.ConvertCoordinate(_penData[i].coordinates, CurrentPenDevice.TabletDimension, ClientSize);
                             }
                             else
                             {
-                                Point curr = InkProcessor.ConvertCoordinate(_penData[i].coordinates, _currentPenDevice.TabletDimension, ClientSize);
+                                Point curr = InkProcessor.ConvertCoordinate(_penData[i].coordinates, CurrentPenDevice.TabletDimension, ClientSize);
                                 gfx.DrawLine(DefaultPen, prev, curr);
                                 prev = curr;
                             }
@@ -756,6 +881,36 @@ namespace InkPlatform.UserControls
             }
             catch (Exception) { }
             
+        }
+
+        private void SignpadControl_LocationChanged(object sender, EventArgs e)
+        {
+            if (CurrentPenDevice == null) return;
+            if (CurrentPenDevice.DeviceType == DEVICE_TYPE.SIGNPAD || 
+                CurrentPenDevice.DeviceType == DEVICE_TYPE.PEN_TABLET)
+                    return;
+
+            if (Screen.AllScreens.Count() > 1)
+            {
+                foreach (Screen screen in Screen.AllScreens)
+                {
+                    if (screen.Bounds.Contains(Location))
+                    {
+                        CurrentPenDevice.ScreenDimension = screen.Bounds.Size;
+                        return;
+                    }
+                }
+            }
+            else
+            {
+                CurrentPenDevice.ScreenDimension = Screen.PrimaryScreen.Bounds.Size;
+            }
+        }
+
+        private void SignpadControl_SizeChanged(object sender, EventArgs e)
+        {
+            this.resetGraphics();
+            SignpadControl_Paint(this, null);
         }
     }
 }
