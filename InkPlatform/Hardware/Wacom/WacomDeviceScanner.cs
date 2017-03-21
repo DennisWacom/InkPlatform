@@ -39,44 +39,51 @@ namespace InkPlatform.Hardware.Wacom
         {
             List<PenDevice> result = new List<PenDevice>();
 
-            string execFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string hardwareFolder = Path.Combine(execFolder, "Hardware");
-            string[] vendorFolders = Directory.GetDirectories(hardwareFolder);
-            foreach (string vendorFolder in vendorFolders)
+            try
             {
-                string[] files = Directory.GetFiles(vendorFolder, "*.json");
-                foreach (string file in files)
+                string execFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                string hardwareFolder = Path.Combine(execFolder, "Hardware");
+                string[] vendorFolders = Directory.GetDirectories(hardwareFolder);
+                foreach (string vendorFolder in vendorFolders)
                 {
-                    string json = File.ReadAllText(file);
-                    try
+                    string[] files = Directory.GetFiles(vendorFolder, "*.json");
+                    foreach (string file in files)
                     {
-                        JObject o = JObject.Parse(json);
-                        int vid = o["Vid"].Value<int>();
-                        int deviceType = o["DeviceType"].Value<int>();
-                        
-                        if (vid == WacomDeviceScanner.WACOM_VID)
+                        string json = File.ReadAllText(file);
+                        try
                         {
-                            if (deviceType == (int)DEVICE_TYPE.SIGNPAD)
-                            {
-                                WacomSignpad signpad = JsonConvert.DeserializeObject<WacomSignpad>(json);
-                                result.Add(signpad);
-                            }
-                            else
-                            {
-                                WacomWintabDevice wintab = JsonConvert.DeserializeObject<WacomWintabDevice>(json);
-                                result.Add(wintab);
-                            }
-                        }
-                        
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.Write(ex.Message);
-                    }
+                            JObject o = JObject.Parse(json);
+                            int vid = o["Vid"].Value<int>();
+                            int deviceType = o["DeviceType"].Value<int>();
 
+                            if (vid == WacomDeviceScanner.WACOM_VID)
+                            {
+                                if (deviceType == (int)DEVICE_TYPE.SIGNPAD)
+                                {
+                                    WacomSignpad signpad = JsonConvert.DeserializeObject<WacomSignpad>(json);
+                                    result.Add(signpad);
+                                }
+                                else
+                                {
+                                    WacomWintabDevice wintab = JsonConvert.DeserializeObject<WacomWintabDevice>(json);
+                                    result.Add(wintab);
+                                }
+                            }
+
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.Write(ex.Message);
+                        }
+
+                    }
                 }
             }
+            catch (Exception)
+            {
 
+            }
+            
             return result;
         }
 
