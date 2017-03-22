@@ -113,7 +113,12 @@ namespace InkPlatform.Hardware.Wacom
         public WacomSignpad IdentifyWacomSignpad(ushort vid, ushort pid)
         {
 
-            return (WacomSignpad)GetWacomPenDevice(vid, pid);
+            WacomSignpad result = (WacomSignpad)GetWacomPenDevice(vid, pid);
+
+            if(result != null)
+            {
+                return result;
+            }
 
             if (vid != WacomSignpad.VID) return null;
 
@@ -139,7 +144,11 @@ namespace InkPlatform.Hardware.Wacom
                 string pidString = DeviceIdString.Substring(17, 4);
                 ushort vid = ushort.Parse(vidString, System.Globalization.NumberStyles.HexNumber);
                 ushort pid = ushort.Parse(pidString, System.Globalization.NumberStyles.HexNumber);
-                return (WintabDevice)GetWacomPenDevice(vid, pid);
+                WintabDevice device = (WintabDevice)GetWacomPenDevice(vid, pid);
+                if(device != null)
+                {
+                    return device;
+                }
             }
             catch (Exception)
             {
@@ -164,8 +173,12 @@ namespace InkPlatform.Hardware.Wacom
         public WacomSignpad IdentifyWacomSignpad(IUsbDevice usbDevice)
         {
             if (usbDevice == null) return null;
-            return (WacomSignpad)GetWacomPenDevice(usbDevice.idVendor, usbDevice.idProduct);
-
+            WacomSignpad signpad = (WacomSignpad)GetWacomPenDevice(usbDevice.idVendor, usbDevice.idProduct);
+            if(signpad != null)
+            {
+                return signpad;
+            }
+            
             if (usbDevice.idVendor != WacomSignpad.VID) return null;
 
             if (usbDevice.idProduct == STU300.PID) return new STU300(usbDevice);
