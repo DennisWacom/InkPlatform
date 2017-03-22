@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InkPlatform", "InkPlatform\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InkPlatformTest", "InkPlatformTest\InkPlatformTest.csproj", "{E3F675E1-B2B3-4988-8A3B-22C2466B3F16}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WintabDN", "WintabDN\WintabDN.csproj", "{73EAE30A-60B9-43A5-AD81-9B05873E405C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WintabDotNet", "WintabDN\WintabDotNet.csproj", "{73EAE30A-60B9-43A5-AD81-9B05873E405C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

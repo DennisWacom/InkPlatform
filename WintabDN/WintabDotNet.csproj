@@ -8,8 +8,8 @@
     <ProjectGuid>{73EAE30A-60B9-43A5-AD81-9B05873E405C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WintabDN</RootNamespace>
-    <AssemblyName>WintabDN</AssemblyName>
+    <RootNamespace>WintabDotNet</RootNamespace>
+    <AssemblyName>WintabDotNet</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -50,6 +50,9 @@
     <Compile Include="HelpInfo.cs" />
     <Compile Include="MessageEvents.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="MIT-license.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
