@@ -16,9 +16,13 @@ namespace InkPlatform.Hardware
     {
         private WacomDeviceScanner _wacomScanner;
 
+        public delegate List<PenDevice> ScanDeviceDelegate();
+        public ScanDeviceDelegate ScanAsync;
+
         public DeviceScanner()
         {
             _wacomScanner = new WacomDeviceScanner();
+            ScanAsync = Scan;
         }
         
         public List<ushort> SupportedVidList()

@@ -75,6 +75,11 @@ namespace WintabDN
             _window.RegisterEventForMessage(message);
         }
 
+        public static void ClearMessageEvents()
+        {
+            MessageReceived = null;
+        }
+
         /// <summary>
         /// Returns the MessageEvents native Windows handle.
         /// </summary>

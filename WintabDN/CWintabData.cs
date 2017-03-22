@@ -434,6 +434,11 @@ namespace WintabDN
             MessageEvents.MessageReceived += handler_I;
         }
 
+        public void ClearWTPacketEventHandler()
+        {
+            MessageEvents.ClearMessageEvents();
+        }
+
         /// <summary>
         /// Set packet queue size for this data object's context.
         /// </summary>

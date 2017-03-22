@@ -188,9 +188,11 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\WintabDN\WintabDN\WintabDN.csproj">
+    <ProjectReference Include="..\WintabDN\WintabDN.csproj">
       <Project>{73eae30a-60b9-43a5-ad81-9b05873e405c}</Project>
       <Name>WintabDN</Name>
+      <Private>True</Private>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

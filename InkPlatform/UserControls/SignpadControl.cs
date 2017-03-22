@@ -152,7 +152,7 @@ namespace InkPlatform.UserControls
             Log("Device exception");
             return true;
         }
-
+        
         public int CaptureSignature(string who, string why, PenDevice penDevice)
         {
             SignatureLayout layout = new SignatureLayout("Sign", who, why);
@@ -912,5 +912,20 @@ namespace InkPlatform.UserControls
             this.resetGraphics();
             SignpadControl_Paint(this, null);
         }
+
+        /// <summary> 
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            Disconnect();
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
     }
 }

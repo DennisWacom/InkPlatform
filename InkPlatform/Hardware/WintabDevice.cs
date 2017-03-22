@@ -185,12 +185,19 @@ namespace InkPlatform.Hardware
 
         private void CloseCurrentContext()
         {
+            if(_data != null)
+            {
+                _data.ClearWTPacketEventHandler();
+                _data = null;
+            }
+
             if (_context != null)
             {
                 _context.Close();
                 _context = null;
-                _data = null;
+
             }
+            
         }
 
     }

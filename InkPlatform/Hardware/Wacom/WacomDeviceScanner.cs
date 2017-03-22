@@ -231,31 +231,37 @@ namespace InkPlatform.Hardware.Wacom
         {
             List<PenDevice> result = new List<PenDevice>();
 
-            ManagementObjectCollection collection;
-            using(var searcher = new ManagementObjectSearcher(@"Select * from Win32_PnPEntity"))
+            try
             {
-                collection = searcher.Get();
-
-                foreach (var device in collection)
+                ManagementScope scope = new ManagementScope(@"\\" + Environment.MachineName + @"\root\CIMV2");
+                SelectQuery query = new SelectQuery(@"Select * from Win32_PnPEntity");
+                ManagementObjectSearcher searcher = new ManagementObjectSearcher(scope, query);
+                using (ManagementObjectCollection collection = searcher.Get())
                 {
-                    string deviceId = (string)device.GetPropertyValue("DeviceID");
-                    if (deviceId.Contains(WacomSignpad.VID_STRING))
+                    foreach (var device in collection)
                     {
-                        WintabDevice wtDevice = IdentifyWacomPenDisplay(deviceId);
-                        if(wtDevice != null)
+                        string deviceId = (string)device.GetPropertyValue("DeviceID");
+                        if (deviceId.Contains(WacomSignpad.VID_STRING))
                         {
-                            result.Add(wtDevice);
-                        }
+                            WintabDevice wtDevice = IdentifyWacomPenDisplay(deviceId);
+                            if (wtDevice != null)
+                            {
+                                result.Add(wtDevice);
+                            }
 
-                        //Console.WriteLine((string)device.GetPropertyValue("DeviceID"));
-                        //Console.WriteLine((string)device.GetPropertyValue("Name"));
-                        //Console.WriteLine((string)device.GetPropertyValue("Manufacturer"));
-                        //Console.WriteLine((string)device.GetPropertyValue("Description"));
+                            //Console.WriteLine((string)device.GetPropertyValue("DeviceID"));
+                            //Console.WriteLine((string)device.GetPropertyValue("Name"));
+                            //Console.WriteLine((string)device.GetPropertyValue("Manufacturer"));
+                            //Console.WriteLine((string)device.GetPropertyValue("Description"));
+                        }
                     }
                 }
             }
+            catch (Exception)
+            {
+                
+            }
             
-
             return result;
         }
 
