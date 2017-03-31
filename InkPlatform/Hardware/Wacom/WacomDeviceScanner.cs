@@ -13,10 +13,20 @@ using Newtonsoft.Json.Linq;
 
 namespace InkPlatform.Hardware.Wacom
 {
+    /// <summary>
+    /// Class to detect and identify wacom devices connected
+    /// </summary>
+    /// <seealso cref="InkPlatform.Hardware.Wacom.IDeviceScanner" />
     public class WacomDeviceScanner : IDeviceScanner
     {
+        /// <summary>
+        /// The vendor id for wacom device : 056A (Hex) or 1386 (Dec)
+        /// </summary>
         public static int WACOM_VID = 1386;
 
+        /// <summary>
+        /// Structure to hold COM information for serial device connection
+        /// </summary>
         public struct COM_CONNECTION
         {
             public string COM_NO;
@@ -28,13 +38,24 @@ namespace InkPlatform.Hardware.Wacom
             return WacomSignpad.VID;
         }
 
+        /// <summary>
+        /// List to contain all recognized devices from the Hardware folder
+        /// </summary>
         List<PenDevice> _wacomPenDevices;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WacomDeviceScanner"/> class. This will call the 
+        /// LoadRecognizedDevices to load the json files from the Hardware folder
+        /// </summary>
         public WacomDeviceScanner()
         {
             _wacomPenDevices = LoadRecognizedDevices();
         }
 
+        /// <summary>
+        /// Loads the json files in the Hardware\[Vendor] folder. 
+        /// </summary>
+        /// <returns>List of pen devices recognized</returns>
         public List<PenDevice> LoadRecognizedDevices()
         {
             List<PenDevice> result = new List<PenDevice>();
@@ -87,6 +108,10 @@ namespace InkPlatform.Hardware.Wacom
             return result;
         }
 
+        /// <summary>
+        /// Scans for any plugged in pen devices, looking for usb signpad, serial signpad, and wintab devices
+        /// </summary>
+        /// <returns>List of pen devices connected</returns>
         public List<PenDevice> Scan()
         {
             List<PenDevice> result = new List<PenDevice>();
@@ -97,7 +122,13 @@ namespace InkPlatform.Hardware.Wacom
 
             return result;
         }
-        
+
+        /// <summary>
+        /// Gets the wacom pen device for the specific vid and pid
+        /// </summary>
+        /// <param name="vid">The vid.</param>
+        /// <param name="pid">The pid.</param>
+        /// <returns>Pendevice connected</returns>
         public PenDevice GetWacomPenDevice(ushort vid, ushort pid)
         {
             foreach(PenDevice device in _wacomPenDevices)
@@ -110,6 +141,12 @@ namespace InkPlatform.Hardware.Wacom
             return null;
         }
 
+        /// <summary>
+        /// Identifies the wacom signpad for the specified vid and pid
+        /// </summary>
+        /// <param name="vid">The vid.</param>
+        /// <param name="pid">The pid.</param>
+        /// <returns>Wacom signpad connected</returns>
         public WacomSignpad IdentifyWacomSignpad(ushort vid, ushort pid)
         {
 
@@ -132,7 +169,12 @@ namespace InkPlatform.Hardware.Wacom
 
             return null;
         }
-        
+
+        /// <summary>
+        /// Identifies the wacom pen display by the deviceid string as gotten from the win32_pnpentity
+        /// </summary>
+        /// <param name="DeviceIdString">The device identifier string.</param>
+        /// <returns>Wintab device connected</returns>
         public WintabDevice IdentifyWacomPenDisplay(string DeviceIdString)
         {
             // USB\VID_056A&PID_00FB\3CZQ003595
@@ -170,6 +212,11 @@ namespace InkPlatform.Hardware.Wacom
             return null;
         }
 
+        /// <summary>
+        /// Identifies the wacom signpad with the usbDevice (from STU SDK)
+        /// </summary>
+        /// <param name="usbDevice">The usb device.</param>
+        /// <returns>Wacom signpad connected</returns>
         public WacomSignpad IdentifyWacomSignpad(IUsbDevice usbDevice)
         {
             if (usbDevice == null) return null;
@@ -192,6 +239,10 @@ namespace InkPlatform.Hardware.Wacom
             return null;
         }
 
+        /// <summary>
+        /// Scans the usb signpad, using the UsbDevices class from Wacom's STU SDK
+        /// </summary>
+        /// <returns>list of wacom stu signpads connected</returns>
         public List<PenDevice> ScanUsbSignpad()
         {
             List<PenDevice> result = new List<PenDevice>();
@@ -211,6 +262,10 @@ namespace InkPlatform.Hardware.Wacom
             return result;
         }
 
+        /// <summary>
+        /// Scans for any serial signpad.
+        /// </summary>
+        /// <returns>List of connected serial signpads</returns>
         public List<PenDevice> ScanSerialSignpad()
         {
             List<COM_CONNECTION> coms = new List<COM_CONNECTION>();
@@ -227,6 +282,10 @@ namespace InkPlatform.Hardware.Wacom
             return result;
         }
 
+        /// <summary>
+        /// Scans for any pen displays using the Win32_PnpEntity from Windows function
+        /// </summary>
+        /// <returns>List of pen displays connected</returns>
         public List<PenDevice> ScanWintabDevice()
         {
             List<PenDevice> result = new List<PenDevice>();
@@ -265,6 +324,11 @@ namespace InkPlatform.Hardware.Wacom
             return result;
         }
 
+        /// <summary>
+        /// Scans serial ports for COM connections - serial sign pads
+        /// </summary>
+        /// <returns>List of serial sign pad connected</returns>
+        /// <exception cref="Exception"></exception>
         public List<COM_CONNECTION> DetectSerialPorts()
         {
             string utilitiesFolder = Path.Combine(

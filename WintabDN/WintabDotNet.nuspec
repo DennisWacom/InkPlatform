@@ -1,18 +1,17 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>$id$</id>
+    <id>WacomSolutionPartner.WintabDotNet</id>
     <version>$version$</version>
     <title>$title$</title>
-    <authors>$author$</authors>
+    <authors>dennis</authors>
     <owners>$author$</owners>
-    <licenseUrl>http://LICENSE_URL_HERE_OR_DELETE_THIS_LINE</licenseUrl>
-    <projectUrl>http://PROJECT_URL_HERE_OR_DELETE_THIS_LINE</projectUrl>
-    <iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>
+    <licenseUrl>https://github.com/DennisWacom/InkPlatform/blob/master/WintabDN/MIT-license.txt</licenseUrl>
+    <projectUrl>https://github.com/DennisWacom/InkPlatform/tree/master/WintabDN</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>$description$</description>
-    <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
+    <description>Another fork of the WintabDN project, updated from https://github.com/aledelgo/WintabDN, edited with improvements</description>
+    <releaseNotes>Added ability to clear messageevents to clear pen event handler when not needed</releaseNotes>
     <copyright>Copyright 2017</copyright>
-    <tags>Tag1 Tag2</tags>
+    <tags>wintab pen stylus</tags>
   </metadata>
 </package>

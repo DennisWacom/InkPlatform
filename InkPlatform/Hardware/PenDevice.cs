@@ -13,11 +13,25 @@ using System.Windows.Forms;
 
 namespace InkPlatform.Hardware
 {
+    /// <summary>
+    /// Enum of device types. Signpad is a peripheral, Pen tablet represents a opaque tablet (intuos),
+    /// Pen display is a 2nd screen with pen input, pen computer represents a tablet computer which has 
+    /// pen input
+    /// </summary>
     public enum DEVICE_TYPE { SIGNPAD, PEN_TABLET, PEN_DISPLAY, PEN_COMPUTER };
+    /// <summary>
+    /// Enum of possible connection modes to connect pen devices. Only USB is currently supported
+    /// </summary>
     public enum CONNECTION_MODE { USB, SERIAL, WIRELESS, BLUETOOTH };
-    
+
+    /// <summary>
+    /// List of possible error codes
+    /// </summary>
     public enum PEN_DEVICE_ERROR { NONE, DEVICE_BUSY, CANNOT_CONNECT, INIT_FAIL, NULL_PARAM, LAYOUT_NOT_FOUND, NOT_SUPPORTED, ALREADY_CONNECTED, NOT_CONNECTED, DISPLAY_FAIL, USER_CANCELLED, LAYOUT_FAIL, UNSPECIFIED};
 
+    /// <summary>
+    /// Represents a pen device (either signpad, pentablet, pen display or tablet computer with pen)
+    /// </summary>
     public abstract class PenDevice
     {
         public delegate void InkDataReceived(InkData ink);
